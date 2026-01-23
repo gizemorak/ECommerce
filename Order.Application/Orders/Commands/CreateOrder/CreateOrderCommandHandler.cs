@@ -1,5 +1,6 @@
 ﻿using Bus.Shared;
 using Bus.Shared.Events;
+using Bus.Shared.Services;
 using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,12 +25,12 @@ namespace OrderApplication.Orders.Commands.CreateOrder
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateOrderCommandHandler> _logger;
-        private readonly IBusService _busService;
+        private readonly KafkaService _busService;
 
         public CreateOrderCommandHandler(
             IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
-            ILogger<CreateOrderCommandHandler> logger, IBusService busService)
+            ILogger<CreateOrderCommandHandler> logger, KafkaService busService)
         {
             this._orderRepository = orderRepository;
             this._unitOfWork = unitOfWork;
@@ -53,7 +54,10 @@ namespace OrderApplication.Orders.Commands.CreateOrder
                 request.UserId,
                 new Address(request.adressdto.Street, request.adressdto.City, request.adressdto.State, request.adressdto.Country, request.adressdto.ZipCode),
                 orderItems
+
             );
+
+            order.PaymentDueAtUtc= DateTime.UtcNow.AddMinutes(10);
 
             _orderRepository.Add(order);
 
@@ -62,7 +66,9 @@ namespace OrderApplication.Orders.Commands.CreateOrder
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            await _busService.Publish(new OrderCreatedEvent(order.Id, request.UserId, order.TotalPrice));
+            await _busService.CreateTopic("ordercreatedtopic");
+
+            await _busService.SendMessage("ordercreatedtopic",new OrderCreatedEvent(order.Id, request.UserId, order.TotalPrice));
 
             return ServiceResult.SuccessAsNoContent();
         }

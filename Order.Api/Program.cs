@@ -1,6 +1,7 @@
 
 using Bus.Shared;
 using Bus.Shared.Options;
+using Bus.Shared.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -57,17 +58,10 @@ namespace Order.Api
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddSingleton<IBusService, RabbitMqBusService>(sp =>
-            {
-                ServiceBusOption serviceBusOptions = sp.GetRequiredService<ServiceBusOption>();
 
-                RabbitMqBusService rabbitMqBus = new RabbitMqBusService(serviceBusOptions);
-                rabbitMqBus.Init().Wait();
-                rabbitMqBus.CreateExchanges().Wait();
-                return rabbitMqBus;
-            });
+            builder.Services.AddSingleton<KafkaService>();
 
-        
+
             var app = builder.Build();
 
 

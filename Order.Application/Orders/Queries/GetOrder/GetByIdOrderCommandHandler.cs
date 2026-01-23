@@ -1,5 +1,6 @@
 ﻿using Bus.Shared;
 using Bus.Shared.Events;
+using Bus.Shared.Services;
 using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,7 @@ namespace OrderApplication.Orders.Queries.GetOrder
         public GetByIdOrderCommandHandler(
             IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
-            ILogger<GetByIdOrderCommandHandler> logger, IBusService busService)
+            ILogger<GetByIdOrderCommandHandler> logger)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;

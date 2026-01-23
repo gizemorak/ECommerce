@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/+4J6DMI2Rg=",
+  "dgSpecHash": "oDzaJkdio6g=",
   "success": true,
-  "projectFilePath": "C:\\Users\\57503\\source\\repos\\ECommerce\\Order.Domain\\OrderDomain.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\57503\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.12\\microsoft.windowsdesktop.app.ref.9.0.12.nupkg.sha512",
-    "C:\\Users\\57503\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.12\\microsoft.netcore.app.ref.9.0.12.nupkg.sha512",
-    "C:\\Users\\57503\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.12\\microsoft.aspnetcore.app.ref.9.0.12.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Order.Domain\\OrderDomain.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

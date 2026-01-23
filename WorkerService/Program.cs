@@ -1,7 +1,7 @@
 using Bus.Shared;
 using Bus.Shared.Options;
 using Microsoft.Extensions.Options;
-using WorkerService.Consumers;
+
 
 namespace WorkerService
 {
@@ -12,7 +12,6 @@ namespace WorkerService
             var builder = Host.CreateApplicationBuilder(args);
 
 
-            builder.Services.AddHostedService<UserCreatedEventConsumer>();
 
             builder.Services.Configure<ServiceBusOption>(
                 builder.Configuration.GetSection(nameof(ServiceBusOption)));
@@ -23,15 +22,7 @@ namespace WorkerService
 
             });
 
-            builder.Services.AddSingleton<IBusService, RabbitMqBusService>(sp =>
-            {
-                ServiceBusOption serviceBusOptions = sp.GetRequiredService<ServiceBusOption>();
 
-                RabbitMqBusService rabbitMqBus = new RabbitMqBusService(serviceBusOptions);
-
-                rabbitMqBus.Init().Wait();
-                return rabbitMqBus;
-            });
 
             var host = builder.Build();
             host.Run();

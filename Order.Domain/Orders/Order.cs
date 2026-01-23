@@ -38,6 +38,7 @@ namespace OrderDomain.Orders
             PaymentId = paymentId;
         }
 
+        public DateTime PaymentDueAtUtc { get; set; }
         public static Order CreateNewOrder(Guid UserId, Address shiptoAddress, List<OrderItem> orderItems)
         {
             var order = new Order(UserId, shiptoAddress, orderItems);

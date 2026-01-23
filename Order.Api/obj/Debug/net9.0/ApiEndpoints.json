@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "Order.Api.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CMain\u003Eb__0_5",
+    "Method": "\u003CMain\u003Eb__0_4",
     "RelativePath": "cancelorder",
     "HttpMethod": "POST",
     "IsController": false,
@@ -24,7 +24,7 @@
   },
   {
     "ContainingType": "Order.Api.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CMain\u003Eb__0_4",
+    "Method": "\u003CMain\u003Eb__0_3",
     "RelativePath": "sendorder",
     "HttpMethod": "POST",
     "IsController": false,
