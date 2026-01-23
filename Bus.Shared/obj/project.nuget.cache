@@ -1,14 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "lzdGYUbzSDQ=",
+  "dgSpecHash": "4DQrBIMhHVI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\57503\\source\\repos\\ECommerce\\Bus.Shared\\Bus.Shared.csproj",
+  "projectFilePath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\57503\\.nuget\\packages\\rabbitmq.client\\7.2.0\\rabbitmq.client.7.2.0.nupkg.sha512",
-    "C:\\Users\\57503\\.nuget\\packages\\system.threading.ratelimiting\\8.0.0\\system.threading.ratelimiting.8.0.0.nupkg.sha512",
-    "C:\\Users\\57503\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.12\\microsoft.windowsdesktop.app.ref.9.0.12.nupkg.sha512",
-    "C:\\Users\\57503\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.12\\microsoft.netcore.app.ref.9.0.12.nupkg.sha512",
-    "C:\\Users\\57503\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.12\\microsoft.aspnetcore.app.ref.9.0.12.nupkg.sha512"
+    "C:\\Users\\57503\\.nuget\\packages\\system.io.pipelines\\8.0.0\\system.io.pipelines.8.0.0.nupkg.sha512",
+    "C:\\Users\\57503\\.nuget\\packages\\system.threading.ratelimiting\\8.0.0\\system.threading.ratelimiting.8.0.0.nupkg.sha512"
   ],
   "logs": []
 }
