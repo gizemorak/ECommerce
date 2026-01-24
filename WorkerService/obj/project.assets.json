@@ -7539,9 +7539,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\WorkerService.csproj",
-      "projectName": "WorkerService",
-      "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\WorkerService.csproj",
+      "projectUniqueName": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\WorkerServiceKafka.csproj",
+      "projectName": "WorkerServiceKafka",
+      "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\WorkerServiceKafka.csproj",
       "packagesPath": "C:\\Users\\57503\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\obj\\",
       "projectStyle": "PackageReference",

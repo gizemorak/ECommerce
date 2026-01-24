@@ -11,7 +11,7 @@ namespace WorkerService
         {
             var builder = Host.CreateApplicationBuilder(args);
 
-
+            builder.Services.AddHostedService<OrderCreatedEventConsumer>();
 
             builder.Services.Configure<ServiceBusOption>(
                 builder.Configuration.GetSection(nameof(ServiceBusOption)));

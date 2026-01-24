@@ -10,3 +10,15 @@ C:\Users\57503\source\repos\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.dll
 C:\Users\57503\source\repos\ECommerce\Bus.Shared\obj\Debug\net9.0\refint\Bus.Shared.dll
 C:\Users\57503\source\repos\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.pdb
 C:\Users\57503\source\repos\ECommerce\Bus.Shared\obj\Debug\net9.0\ref\Bus.Shared.dll
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\bin\Debug\net9.0\Bus.Shared.deps.json
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\bin\Debug\net9.0\Bus.Shared.dll
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\bin\Debug\net9.0\Bus.Shared.pdb
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.csproj.AssemblyReference.cache
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.AssemblyInfoInputs.cache
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.AssemblyInfo.cs
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.csproj.CoreCompileInputs.cache
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.dll
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\refint\Bus.Shared.dll
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\Bus.Shared.pdb
+C:\Users\57503\Downloads\ECommerce\ECommerce\Bus.Shared\obj\Debug\net9.0\ref\Bus.Shared.dll

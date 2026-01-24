@@ -47,8 +47,9 @@ namespace Bus.Shared.Services
             };
 
             using var producer = new ProducerBuilder<int, OrderCreatedEvent>(producerConfig)
-                  .SetValueSerializer(new ProducerSerializer<OrderCreatedEvent>())
-                  .SetKeySerializer(new ProducerSerializer<int>()).Build();
+       .SetKeySerializer(Serializers.Int32)
+       .SetValueSerializer(new ProducerSerializer<OrderCreatedEvent>())
+       .Build();
 
 
             var userId = Guid.NewGuid();

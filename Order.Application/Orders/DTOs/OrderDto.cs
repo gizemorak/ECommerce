@@ -10,5 +10,8 @@ namespace OrderApplication.Orders.DTOs
     {
         public int OrderId { get; set; }
         public OrderStatusDto OrderStatus { get; set; }
+
+
+        public DateTime PaymentDueAtUtc { get; set; }
     }
 }
