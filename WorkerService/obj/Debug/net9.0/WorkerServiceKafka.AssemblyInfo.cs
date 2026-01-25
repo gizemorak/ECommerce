@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WorkerServiceKafka")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cbfde3049f2efaf3f77f4cffa5887cef162e5227")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8e80a0276d7d6e81e12cd62005e818d0c15b442c")]
 [assembly: System.Reflection.AssemblyProductAttribute("WorkerServiceKafka")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WorkerServiceKafka")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
