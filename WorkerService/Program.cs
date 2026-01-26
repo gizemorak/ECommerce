@@ -1,7 +1,9 @@
 using Bus.Shared;
 using Bus.Shared.Options;
 using Microsoft.Extensions.Options;
-using WorkerService.Consumers;
+using RedisApp.Servives;
+using RedisApp.StreamConsumers;
+
 
 namespace WorkerService
 {
@@ -12,7 +14,8 @@ namespace WorkerService
             var builder = Host.CreateApplicationBuilder(args);
 
 
-            builder.Services.AddHostedService<UserCreatedEventConsumer>();
+            builder.Services.AddHostedService<OrderCreatedEventConsumer>();
+            builder.Services.AddHostedService<PaymentAutoStartWorker>();
 
             builder.Services.Configure<ServiceBusOption>(
                 builder.Configuration.GetSection(nameof(ServiceBusOption)));
@@ -23,14 +26,11 @@ namespace WorkerService
 
             });
 
-            builder.Services.AddSingleton<IBusService, RabbitMqBusService>(sp =>
+            builder.Services.AddSingleton<RedisService>(sp =>
             {
-                ServiceBusOption serviceBusOptions = sp.GetRequiredService<ServiceBusOption>();
-
-                RabbitMqBusService rabbitMqBus = new RabbitMqBusService(serviceBusOptions);
-
-                rabbitMqBus.Init().Wait();
-                return rabbitMqBus;
+                var redisHost = builder.Configuration["RedisOption:Host"];
+                var redisPort = builder.Configuration["RedisOption:Port"];
+                return new RedisService(redisHost!, redisPort!);
             });
 
             var host = builder.Build();

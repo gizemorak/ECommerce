@@ -1,4 +1,4 @@
-name: dockercompose12126464333681521646
+name: dockercompose7177751197252390450
 services:
   mssql:
     container_name: mssql
@@ -21,7 +21,7 @@ services:
         volume: {}
   orderapi:
     build:
-      context: C:\Users\57503\source\repos\ECommerce
+      context: C:\Users\57503\Desktop\ECommerce
       dockerfile: Order.Api/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -80,7 +80,7 @@ services:
         protocol: tcp
 networks:
   default:
-    name: dockercompose12126464333681521646_default
+    name: dockercompose7177751197252390450_default
 volumes:
   mssql_data:
-    name: dockercompose12126464333681521646_mssql_data
+    name: dockercompose7177751197252390450_mssql_data

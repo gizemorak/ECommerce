@@ -1453,6 +1453,22 @@
           }
         }
       },
+      "Pipelines.Sockets.Unofficial/2.2.8": {
+        "type": "package",
+        "dependencies": {
+          "System.IO.Pipelines": "5.0.1"
+        },
+        "compile": {
+          "lib/net5.0/Pipelines.Sockets.Unofficial.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Pipelines.Sockets.Unofficial.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "RabbitMQ.Client/7.2.0": {
         "type": "package",
         "dependencies": {
@@ -1498,6 +1514,24 @@
         },
         "runtime": {
           "lib/netstandard1.0/_._": {}
+        }
+      },
+      "StackExchange.Redis/2.10.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "Pipelines.Sockets.Unofficial": "2.2.8",
+          "System.IO.Hashing": "9.0.10"
+        },
+        "compile": {
+          "lib/net8.0/StackExchange.Redis.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/StackExchange.Redis.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.AppContext/4.1.0": {
@@ -1789,6 +1823,22 @@
         },
         "runtime": {
           "lib/netstandard1.3/System.IO.FileSystem.Primitives.dll": {}
+        }
+      },
+      "System.IO.Hashing/9.0.10": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/System.IO.Hashing.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/System.IO.Hashing.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
         }
       },
       "System.IO.Pipelines/8.0.0": {
@@ -2516,7 +2566,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "RabbitMQ.Client": "7.2.0"
+          "RabbitMQ.Client": "7.2.0",
+          "StackExchange.Redis": "2.10.1"
         },
         "compile": {
           "bin/placeholder/Bus.Shared.dll": {}
@@ -2533,7 +2584,8 @@
           "MediatR": "14.0.0",
           "Microsoft.AspNetCore.Mvc.Core": "2.3.9",
           "OrderDomain": "1.0.0",
-          "Refit": "9.0.2"
+          "Refit": "9.0.2",
+          "StackExchange.Redis": "2.10.1"
         },
         "compile": {
           "bin/placeholder/OrderApplication.dll": {}
@@ -4332,6 +4384,29 @@
         "tools/install.ps1"
       ]
     },
+    "Pipelines.Sockets.Unofficial/2.2.8": {
+      "sha512": "zG2FApP5zxSx6OcdJQLbZDk2AVlN2BNQD6MorwIfV6gVj0RRxWPEp2LXAxqDGZqeNV1Zp0BNPcNaey/GXmTdvQ==",
+      "type": "package",
+      "path": "pipelines.sockets.unofficial/2.2.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Pipelines.Sockets.Unofficial.dll",
+        "lib/net461/Pipelines.Sockets.Unofficial.xml",
+        "lib/net472/Pipelines.Sockets.Unofficial.dll",
+        "lib/net472/Pipelines.Sockets.Unofficial.xml",
+        "lib/net5.0/Pipelines.Sockets.Unofficial.dll",
+        "lib/net5.0/Pipelines.Sockets.Unofficial.xml",
+        "lib/netcoreapp3.1/Pipelines.Sockets.Unofficial.dll",
+        "lib/netcoreapp3.1/Pipelines.Sockets.Unofficial.xml",
+        "lib/netstandard2.0/Pipelines.Sockets.Unofficial.dll",
+        "lib/netstandard2.0/Pipelines.Sockets.Unofficial.xml",
+        "lib/netstandard2.1/Pipelines.Sockets.Unofficial.dll",
+        "lib/netstandard2.1/Pipelines.Sockets.Unofficial.xml",
+        "pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
+        "pipelines.sockets.unofficial.nuspec"
+      ]
+    },
     "RabbitMQ.Client/7.2.0": {
       "sha512": "PPQ7cF7lwbhqC4up6en1bTUZlz06YqQwJecOJzsguTtyhNA7oL5uNDZIx/h6ZfcyPZV4V3DYKSCxfm4RUFLcbA==",
       "type": "package",
@@ -4390,6 +4465,30 @@
         "lib/netstandard1.0/_._",
         "runtime.native.system.4.0.0.nupkg.sha512",
         "runtime.native.system.nuspec"
+      ]
+    },
+    "StackExchange.Redis/2.10.1": {
+      "sha512": "se08WZvD42H3bV4XBW07pupTiE2/72qStKyi/lRqqcijksFWfRtwLTuhFtZ4OX19f4+we/2qruFZBXYJBFc8PQ==",
+      "type": "package",
+      "path": "stackexchange.redis/2.10.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net461/StackExchange.Redis.dll",
+        "lib/net461/StackExchange.Redis.xml",
+        "lib/net472/StackExchange.Redis.dll",
+        "lib/net472/StackExchange.Redis.xml",
+        "lib/net6.0/StackExchange.Redis.dll",
+        "lib/net6.0/StackExchange.Redis.xml",
+        "lib/net8.0/StackExchange.Redis.dll",
+        "lib/net8.0/StackExchange.Redis.xml",
+        "lib/netcoreapp3.1/StackExchange.Redis.dll",
+        "lib/netcoreapp3.1/StackExchange.Redis.xml",
+        "lib/netstandard2.0/StackExchange.Redis.dll",
+        "lib/netstandard2.0/StackExchange.Redis.xml",
+        "stackexchange.redis.2.10.1.nupkg.sha512",
+        "stackexchange.redis.nuspec"
       ]
     },
     "System.AppContext/4.1.0": {
@@ -5150,6 +5249,34 @@
         "ref/xamarinwatchos10/_._",
         "system.io.filesystem.primitives.4.0.1.nupkg.sha512",
         "system.io.filesystem.primitives.nuspec"
+      ]
+    },
+    "System.IO.Hashing/9.0.10": {
+      "sha512": "9gv5z71xaWWmcGEs4bXdreIhKp2kYLK2fvPK5gQkgnWMYvZ8ieaxKofDjxL3scZiEYfi/yW2nJTiKV2awcWEdA==",
+      "type": "package",
+      "path": "system.io.hashing/9.0.10",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.IO.Hashing.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.IO.Hashing.targets",
+        "lib/net462/System.IO.Hashing.dll",
+        "lib/net462/System.IO.Hashing.xml",
+        "lib/net8.0/System.IO.Hashing.dll",
+        "lib/net8.0/System.IO.Hashing.xml",
+        "lib/net9.0/System.IO.Hashing.dll",
+        "lib/net9.0/System.IO.Hashing.xml",
+        "lib/netstandard2.0/System.IO.Hashing.dll",
+        "lib/netstandard2.0/System.IO.Hashing.xml",
+        "system.io.hashing.9.0.10.nupkg.sha512",
+        "system.io.hashing.nuspec",
+        "useSharedDesignerContext.txt"
       ]
     },
     "System.IO.Pipelines/8.0.0": {
@@ -7349,11 +7476,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\WorkerService.csproj",
-      "projectName": "WorkerService",
-      "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\WorkerService.csproj",
+      "projectUniqueName": "C:\\Users\\57503\\Desktop\\ECommerce\\WorkerService\\WorkerServiceRedis.csproj",
+      "projectName": "WorkerServiceRedis",
+      "projectPath": "C:\\Users\\57503\\Desktop\\ECommerce\\WorkerService\\WorkerServiceRedis.csproj",
       "packagesPath": "C:\\Users\\57503\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\WorkerService\\obj\\",
+      "outputPath": "C:\\Users\\57503\\Desktop\\ECommerce\\WorkerService\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -7374,14 +7501,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj": {
-              "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj"
+            "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\Bus.Shared.csproj": {
+              "projectPath": "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\Bus.Shared.csproj"
             },
-            "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Order.Application\\OrderApplication.csproj": {
-              "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Order.Application\\OrderApplication.csproj"
+            "C:\\Users\\57503\\Desktop\\ECommerce\\Order.Application\\OrderApplication.csproj": {
+              "projectPath": "C:\\Users\\57503\\Desktop\\ECommerce\\Order.Application\\OrderApplication.csproj"
             },
-            "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\OrderPersistence\\OrderPersistence.csproj": {
-              "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\OrderPersistence\\OrderPersistence.csproj"
+            "C:\\Users\\57503\\Desktop\\ECommerce\\OrderPersistence\\OrderPersistence.csproj": {
+              "projectPath": "C:\\Users\\57503\\Desktop\\ECommerce\\OrderPersistence\\OrderPersistence.csproj"
             }
           }
         }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj": {}
+    "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\Bus.Shared.csproj": {}
   },
   "projects": {
-    "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj": {
+    "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\Bus.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\Bus.Shared.csproj",
         "projectName": "Bus.Shared",
-        "projectPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\Bus.Shared.csproj",
+        "projectPath": "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\Bus.Shared.csproj",
         "packagesPath": "C:\\Users\\57503\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\57503\\Downloads\\ECommerce\\ECommerce\\Bus.Shared\\obj\\",
+        "outputPath": "C:\\Users\\57503\\Desktop\\ECommerce\\Bus.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -53,6 +53,10 @@
             "RabbitMQ.Client": {
               "target": "Package",
               "version": "[7.2.0, )"
+            },
+            "StackExchange.Redis": {
+              "target": "Package",
+              "version": "[2.10.1, )"
             }
           },
           "imports": [

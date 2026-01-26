@@ -11,6 +11,7 @@ using OrderApplication.Orders.Queries.GetOrder;
 using OrderDomain.Repositories;
 using OrderPersistence;
 using OrderPersistence.Repositories;
+using RedisApp.Servives;
 
 namespace Order.Api
 {
@@ -51,21 +52,17 @@ namespace Order.Api
             builder.Services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssemblyContaining<GetByIdOrderCommandHandler>());
 
+            builder.Services.AddSingleton<RedisService>(sp =>
+            {
+                var redisHost = builder.Configuration["RedisOption:Host"];
+                var redisPort = builder.Configuration["RedisOption:Port"];
+                return new RedisService(redisHost!, redisPort!);
+            });
 
 
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            builder.Services.AddSingleton<IBusService, RabbitMqBusService>(sp =>
-            {
-                ServiceBusOption serviceBusOptions = sp.GetRequiredService<ServiceBusOption>();
-
-                RabbitMqBusService rabbitMqBus = new RabbitMqBusService(serviceBusOptions);
-                rabbitMqBus.Init().Wait();
-                rabbitMqBus.CreateExchanges().Wait();
-                return rabbitMqBus;
-            });
 
         
             var app = builder.Build();

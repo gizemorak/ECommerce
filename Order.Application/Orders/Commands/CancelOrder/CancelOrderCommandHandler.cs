@@ -18,17 +18,17 @@ namespace OrderApplication.Orders.Commands.CancelOrder
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CreateOrderCommandHandler> _logger;
-        private readonly IBusService _busService;
+
 
         public CancelOrderCommandHandler(
             IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
-            ILogger<CreateOrderCommandHandler> logger, IBusService busService)
+            ILogger<CreateOrderCommandHandler> logger)
         {
             this._orderRepository = orderRepository;
             this._unitOfWork = unitOfWork;
             this._logger = logger;
-            this._busService = busService;
+     
 
 
         }

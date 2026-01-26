@@ -29,7 +29,7 @@ namespace OrderApplication.Orders.Queries.GetOrder
         public GetByIdOrderCommandHandler(
             IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
-            ILogger<GetByIdOrderCommandHandler> logger, IBusService busService)
+            ILogger<GetByIdOrderCommandHandler> logger)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
