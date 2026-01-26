@@ -39,39 +39,27 @@ public class OrderCreatedEventConsumer(IConfiguration configuration, IServicePro
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // Wait a bit for partition assignment
+        
         await Task.Delay(2000, stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                Console.WriteLine("Waiting for message...");
+  
 
                 var cr = consumer.Consume(stoppingToken);
 
                 Console.WriteLine("Waiting for message...");
 
 
-                if (cr == null)
+                if (cr == null || cr.Message == null)
                 {
-                    Console.WriteLine("ConsumeResult is null");
+                    Console.WriteLine("ConsumeResult or Message is null");
                     continue;
                 }
 
-                if (cr.IsPartitionEOF)
-                {
-                    Console.WriteLine($"Reached end of partition {cr.Partition.Value}, offset {cr.Offset.Value}");
-                    continue;
-                }
-
-                Console.WriteLine($"Received message from partition {cr.Partition.Value}, offset {cr.Offset.Value}");
-
-                if (cr.Message == null)
-                {
-                    Console.WriteLine("Message is null");
-                    continue;
-                }
+        
 
                 if (cr.Message.Value == null)
                 {
