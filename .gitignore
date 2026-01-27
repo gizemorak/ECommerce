@@ -855,3 +855,17 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/obj
+/bin
+/Bus.Shared/obj
+/Bus.Shared/bin
+/Order.Api/obj
+/Order.Api/bin
+/Order.Application/obj
+/Order.Application/bin
+/Order.Domain/obj
+/Order.Domain/bin
+/OrderPersistence/obj
+/OrderPersistence/bin
+/WorkerService/obj
+/WorkerService/bin

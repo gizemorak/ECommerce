@@ -10,6 +10,7 @@ using OrderPersistence;
 using OrderPersistence.Repositories;
 using RedisApp.Servives;
 using RedisApp.StreamConsumers;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace WorkerService
@@ -47,6 +48,7 @@ namespace WorkerService
             });
 
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Services.AddSingleton<RedisService>(sp =>
             {
