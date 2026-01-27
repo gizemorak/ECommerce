@@ -3,11 +3,11 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "Order.Api\\OrderNApi.csproj",
+        "Path": "WorkerService\\WorkerServiceRedis.csproj",
         "Action": "Start"
       },
       {
-        "Path": "WorkerService\\WorkerServiceRedis.csproj",
+        "Path": "Order.Api\\OrderApi.csproj",
         "Action": "Start"
       }
     ]

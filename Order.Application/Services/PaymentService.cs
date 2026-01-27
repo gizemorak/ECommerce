@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.Services
 {
-    public class PaymentService
+    public class PaymentService:IPaymentService
     {
-        public void CheckPayment()
+        public async Task StartPaymentAsync(int OrderId)
         {
             //todo payment prosess
             Console.WriteLine("Ödeme alındı");

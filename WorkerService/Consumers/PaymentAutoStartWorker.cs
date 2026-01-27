@@ -1,9 +1,14 @@
-﻿using StackExchange.Redis;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using OrderApplication;
+using OrderApplication.Orders.DTOs;
+using OrderApplication.Services;
 using RedisApp.Servives;
+using StackExchange.Redis;
 
 namespace RedisApp.StreamConsumers
 {
-    public class PaymentAutoStartWorker(RedisService redisService, ILogger<PaymentAutoStartWorker> logger)
+    public class PaymentAutoStartWorker(RedisService redisService, IServiceProvider serviceProvider, ILogger<PaymentAutoStartWorker> logger)
         : BackgroundService
     {
         private IDatabase _db = default!;
@@ -56,15 +61,32 @@ return items
                         if (string.IsNullOrWhiteSpace(orderId))
                             continue;
 
+                        using var scope = serviceProvider.CreateScope();
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
+                        var getOrderQuery = new OrderApplication.Orders.Queries.GetOrder.GetByIdOrderCommand(Convert.ToInt32(orderId));
+
+                        ServiceResult<OrderDto> orderResult = (ServiceResult<OrderDto>)await mediator.Send(getOrderQuery);
+                        if (orderResult is null)
+                        {
+                            Console.WriteLine($"Order not found for OrderId={orderId}");
+                           
+                            continue;
+                        }
+
+                        var order = orderResult.Data;
+
+                        if (order.OrderStatus == OrderStatusDto.Cancelled)
+                        {
+                            Console.WriteLine($"Order {order.OrderId} is already cancelled");
+                        
+                            continue;
+                        }
 
                         await StartPaymentIfEligibleAsync(orderId, stoppingToken);
                     }
                 }
-                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-                {
-                    // normal shutdown
-                }
+
                 catch (Exception ex)
                 {
                     logger.LogError(ex, "Error in PaymentAutoStartWorker loop");
@@ -75,17 +97,13 @@ return items
 
         private async Task StartPaymentIfEligibleAsync(string orderId, CancellationToken ct)
         {
-            // IMPORTANT: Here you MUST protect against user cancel / already paid.
-            // Best practice:
-            // - In DB do: UPDATE Orders SET Status='PaymentStarting'
-            //   WHERE Id=@id AND Status='WaitingPayment'
-            // - If affected rows == 1 => you own payment start
-            // - Else => do nothing
+          
 
             logger.LogInformation("Auto-start payment triggered for OrderId={OrderId}", orderId);
 
-            // TODO: call your payment start process here
-            // await _paymentService.StartPaymentAsync(Guid.Parse(orderId), ct);
+            using var scope = serviceProvider.CreateScope();
+            var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
+            await paymentService.StartPaymentAsync(Convert.ToInt32(orderId));
 
             await Task.CompletedTask;
         }

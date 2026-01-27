@@ -69,13 +69,49 @@ namespace OrderApplication.Orders.Commands.CreateOrder
 
             var db =_redisService.GetDatabase();
 
+            var maxRetries = 3;
+            var retryCount = 0;
+            RedisValue messageId = RedisValue.Null;
+
+            var eventId = Guid.NewGuid().ToString("N");
+
             var message = new NameValueEntry[]
-       {
-            new("user", JsonSerializer.Serialize(new OrderCreatedEvent(order.Id, request.UserId, order.TotalPrice))),
-            new("version", "v1"),
+
+ {
+            new("order", JsonSerializer.Serialize(new OrderCreatedEvent(order.Id, request.UserId, order.TotalPrice))),
+            new("eventId", eventId),
             new("created_date", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture))
-       };
-            await db.StreamAddAsync("ordercreated", message, null, null, false);
+ };
+
+            while (retryCount < maxRetries)
+            {
+                try
+                {
+                    messageId = await db.StreamAddAsync("ordercreated", message, null, null, false);
+
+                    if (messageId.HasValue)
+                    {
+                        break;
+                    }
+
+                    retryCount++;
+                    if (retryCount >= maxRetries)
+                    {
+                        throw new Exception("message can not send redis stream");
+                    }
+                }
+                catch (Exception)
+                {
+                    retryCount++;
+                    if (retryCount >= maxRetries)
+                    {
+                        throw;
+                    }
+
+                    await Task.Delay(100 * retryCount);
+                }
+            }
+
 
             return ServiceResult.SuccessAsNoContent();
         }

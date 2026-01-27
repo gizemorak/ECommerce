@@ -1,6 +1,13 @@
 using Bus.Shared;
 using Bus.Shared.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using OrderApplication.Orders.Commands.CreateOrder;
+using OrderApplication.Orders.Queries.GetOrder;
+using OrderApplication.Services;
+using OrderDomain.Repositories;
+using OrderPersistence;
+using OrderPersistence.Repositories;
 using RedisApp.Servives;
 using RedisApp.StreamConsumers;
 
@@ -16,6 +23,7 @@ namespace WorkerService
 
             builder.Services.AddHostedService<OrderCreatedEventConsumer>();
             builder.Services.AddHostedService<PaymentAutoStartWorker>();
+            builder.Services.AddScoped<IPaymentService,PaymentService>();
 
             builder.Services.Configure<ServiceBusOption>(
                 builder.Configuration.GetSection(nameof(ServiceBusOption)));
@@ -25,6 +33,20 @@ namespace WorkerService
                 return optionsServiceBus.Value;
 
             });
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateOrderCommandHandler).Assembly));
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetByIdOrderCommandHandler).Assembly));
+
+            string connectionString = builder.Configuration.GetConnectionString("Database");
+
+            builder.Services.AddDbContext<ApplicationDbContext>(
+            (sp, optionsBuilder) =>
+            {
+
+                optionsBuilder.UseSqlServer(connectionString);
+
+            });
+
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
             builder.Services.AddSingleton<RedisService>(sp =>
             {
