@@ -49,6 +49,8 @@ namespace OrderApplication.Orders.Queries.GetOrder
 
             orderdto.OrderId = order.Id;
             orderdto.OrderStatus = (OrderStatusDto)order.Status;
+            orderdto.TotalPrice = order.TotalPrice;
+            orderdto.BuyerId = order.BuyerId;
 
 
 

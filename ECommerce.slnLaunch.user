@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "Order.Api\\OrderNApi.csproj",
+        "Path": "Order.Api\\OrderApi.csproj",
         "Action": "Start"
       }
     ]
