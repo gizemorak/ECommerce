@@ -4,6 +4,7 @@ using Bus.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OrderApplication.Orders.Queries.GetOrder;
+using OrderApplication.Services;
 using OrderDomain.Repositories;
 using OrderPersistence;
 using OrderPersistence.Repositories;
@@ -18,6 +19,7 @@ namespace WorkerService
             var builder = Host.CreateApplicationBuilder(args);
 
             builder.Services.AddHostedService<OrderCreatedEventConsumer>();
+            builder.Services.AddHostedService<PaymentSchedulerWorker>();
 
             builder.Services.AddMediatR(cfg =>
 cfg.RegisterServicesFromAssemblyContaining<GetByIdOrderCommandHandler>());
@@ -52,6 +54,8 @@ cfg.RegisterServicesFromAssemblyContaining<GetByIdOrderCommandHandler>());
 
 
             builder.Services.AddSingleton<KafkaService>();
+
+            builder.Services.AddScoped<IPaymentService,PaymentService>();
 
 
             var host = builder.Build();

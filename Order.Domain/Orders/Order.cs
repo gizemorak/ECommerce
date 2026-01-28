@@ -15,7 +15,7 @@ namespace OrderDomain.Orders
             BuyerId = UserId;
             ShiptoAddress = shiptoAddress;
             CreatedDate = DateTime.UtcNow;
-            Status = OrderStatus.Pending;
+   
         
         }
 

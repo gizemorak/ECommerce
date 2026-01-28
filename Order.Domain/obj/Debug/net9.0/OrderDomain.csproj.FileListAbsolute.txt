@@ -20,3 +20,14 @@ C:\Users\57503\Downloads\ECommerce\ECommerce\Order.Domain\obj\Debug\net9.0\Order
 C:\Users\57503\Downloads\ECommerce\ECommerce\Order.Domain\obj\Debug\net9.0\refint\OrderDomain.dll
 C:\Users\57503\Downloads\ECommerce\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.pdb
 C:\Users\57503\Downloads\ECommerce\ECommerce\Order.Domain\obj\Debug\net9.0\ref\OrderDomain.dll
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.AssemblyInfoInputs.cache
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.AssemblyInfo.cs
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.csproj.CoreCompileInputs.cache
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.dll
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\refint\OrderDomain.dll
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\OrderDomain.pdb
+C:\Users\57503\Desktop\ECommerce\Order.Domain\bin\Debug\net9.0\OrderDomain.deps.json
+C:\Users\57503\Desktop\ECommerce\Order.Domain\bin\Debug\net9.0\OrderDomain.dll
+C:\Users\57503\Desktop\ECommerce\Order.Domain\bin\Debug\net9.0\OrderDomain.pdb
+C:\Users\57503\Desktop\ECommerce\Order.Domain\obj\Debug\net9.0\ref\OrderDomain.dll

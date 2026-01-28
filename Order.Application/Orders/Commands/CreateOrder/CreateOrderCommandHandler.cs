@@ -57,7 +57,8 @@ namespace OrderApplication.Orders.Commands.CreateOrder
 
             );
 
-            order.PaymentDueAtUtc= DateTime.UtcNow.AddMinutes(10);
+            order.PaymentDueAtUtc= DateTime.UtcNow.AddMinutes(3);
+            order.Status= OrderStatus.PendingPaymentDelay;
 
             _orderRepository.Add(order);
 

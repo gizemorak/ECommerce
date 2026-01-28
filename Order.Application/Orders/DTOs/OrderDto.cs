@@ -11,7 +11,9 @@ namespace OrderApplication.Orders.DTOs
         public int OrderId { get; set; }
         public OrderStatusDto OrderStatus { get; set; }
 
+        public Guid BuyerId { get; set; }
 
+        public decimal TotalPrice { get; set; }
         public DateTime PaymentDueAtUtc { get; set; }
     }
 }

@@ -3,8 +3,10 @@ using Bus.Shared.ProducerSerializer;
 using Confluent.Kafka;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic;
 using OrderApplication;
 using OrderApplication.Orders.DTOs;
+using OrderApplication.Services;
 using System.Text.Json;
 
 public class OrderCreatedEventConsumer(IConfiguration configuration, IServiceProvider serviceProvider)
@@ -64,7 +66,7 @@ public class OrderCreatedEventConsumer(IConfiguration configuration, IServicePro
                 if (cr.Message.Value == null)
                 {
                     Console.WriteLine("Message.Value is null - deserialization may have failed");
-                    // Still commit to avoid reprocessing
+
                     consumer.Commit(cr);
                     continue;
                 }
@@ -94,40 +96,10 @@ public class OrderCreatedEventConsumer(IConfiguration configuration, IServicePro
                     continue;
                 }
 
-                var nowUtc = DateTime.UtcNow;
-
-                if (order.PaymentDueAtUtc > nowUtc)
-                {
-                    Console.WriteLine($"Order {order.OrderId} payment not due yet. Due at: {order.PaymentDueAtUtc}");
-                    consumer.Commit(cr);
-                    continue;
-                }
-
-                // todo  send payment request
-                //var result=await mediator.Send(new RequestPaymentCommand(order.Id), stoppingToken);
-
-                Console.WriteLine($"Payment request sent for OrderId={orderResult.Data.OrderId}");
-
                 // if result success turn ack
                 consumer.Commit(cr);
             }
-            catch (ConsumeException ex)
-            {
-                Console.WriteLine($"ConsumeException: {ex.Error.Reason}, IsFatal: {ex.Error.IsFatal}, Code: {ex.Error.Code}");
-                if (ex.Error.IsFatal)
-                {
-                    await Task.Delay(5000, stoppingToken);
-                }
-                else
-                {
-                    await Task.Delay(1000, stoppingToken);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("Consumer operation cancelled");
-                break;
-            }
+
             catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex.GetType().Name} - {ex.Message}");
