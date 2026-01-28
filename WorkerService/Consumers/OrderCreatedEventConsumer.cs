@@ -80,6 +80,7 @@ public class OrderCreatedEventConsumer(IConfiguration configuration, IServicePro
                 var getOrderQuery = new OrderApplication.Orders.Queries.GetOrder.GetByIdOrderCommand(evt.OrderId);
 
                 ServiceResult<OrderDto> orderResult = (ServiceResult<OrderDto>)await mediator.Send(getOrderQuery);
+                
                 if (orderResult is null)
                 {
                     Console.WriteLine($"Order not found for OrderId={evt.OrderId}");
@@ -103,7 +104,6 @@ public class OrderCreatedEventConsumer(IConfiguration configuration, IServicePro
             catch (Exception ex)
             {
                 Console.WriteLine($"Unexpected error: {ex.GetType().Name} - {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 await Task.Delay(1000, stoppingToken);
             }
         }
