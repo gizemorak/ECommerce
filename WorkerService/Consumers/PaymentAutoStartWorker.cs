@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OrderApplication;
 using OrderApplication.Orders.DTOs;
 using OrderApplication.Services;
+using OrderDomain.Orders;
 using RedisApp.Servives;
 using StackExchange.Redis;
 
@@ -83,7 +84,7 @@ return items
                             continue;
                         }
 
-                        await StartPaymentIfEligibleAsync(orderId, stoppingToken);
+                        await StartPaymentAsync(orderId,order.BuyerId,order.TotalPrice, stoppingToken);
                     }
                 }
 
@@ -95,7 +96,7 @@ return items
             }
         }
 
-        private async Task StartPaymentIfEligibleAsync(string orderId, CancellationToken ct)
+        private async Task StartPaymentAsync(string orderId,Guid buyerId, decimal totalPrice,CancellationToken ct)
         {
           
 
@@ -103,7 +104,7 @@ return items
 
             using var scope = serviceProvider.CreateScope();
             var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
-            await paymentService.StartPaymentAsync(Convert.ToInt32(orderId));
+            await paymentService.CheckPayment(Convert.ToInt32(orderId),buyerId,totalPrice);
 
             await Task.CompletedTask;
         }

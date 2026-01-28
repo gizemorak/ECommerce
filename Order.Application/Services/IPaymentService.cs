@@ -8,7 +8,7 @@ namespace OrderApplication.Services
 {
     public interface IPaymentService
     {
-        Task StartPaymentAsync(int OrderId);
+        Task CheckPayment(int OrderId, Guid BuyerId, decimal TotalPrice);
 
     }
 }
