@@ -9,6 +9,7 @@
       "WorkerService/1.0.0": {
         "dependencies": {
           "Bus.Shared": "1.0.0",
+          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.12",
           "Microsoft.Extensions.Hosting": "9.0.10",
           "OrderApplication": "1.0.0",
           "OrderPersistence": "1.0.0"
