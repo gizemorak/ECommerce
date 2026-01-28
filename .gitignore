@@ -867,3 +867,5 @@ FodyWeavers.xsd
 /OrderPersistence/bin
 /WorkerService/obj
 /WorkerService/bin
+/Bus.Shared/obj
+/Bus.Shared/bin

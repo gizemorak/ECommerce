@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.Services
 {
-    public class PaymentService
+    public class PaymentService:IPaymentService
     {
         public async Task CheckPayment(int OrderId, Guid BuyerId, decimal TotalPrice)
         {
