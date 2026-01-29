@@ -3,7 +3,7 @@
     "Name": "New Profile",
     "Projects": [
       {
-        "Path": "WorkerService\\WorkerServiceRedis.csproj",
+        "Path": "WorkerService\\WorkerService.csproj",
         "Action": "Start"
       },
       {

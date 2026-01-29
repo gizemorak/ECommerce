@@ -4,6 +4,19 @@ services:
     build:
       context: .
       dockerfile: Order.Api/Dockerfile
+    depends_on:
+      - mssql
+      - rabbitmq
+      - redis
+  workerservice:
+    image: ${DOCKER_REGISTRY-}workerservice
+    build:
+      context: .
+      dockerfile: WorkerService/Dockerfile
+    depends_on:
+      - mssql
+      - rabbitmq
+      - redis
   rabbitmq:
    image: rabbitmq:3.12.2-management
   mssql:
