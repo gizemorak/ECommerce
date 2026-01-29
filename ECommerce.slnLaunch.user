@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "WorkerService\\WorkerServiceKafka.csproj",
+        "Path": "WorkerService\\WorkerService.csproj",
         "Action": "Start"
       }
     ]
