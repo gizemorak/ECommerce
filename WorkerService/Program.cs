@@ -24,14 +24,7 @@ namespace WorkerService
             builder.Services.AddMediatR(cfg =>
 cfg.RegisterServicesFromAssemblyContaining<GetByIdOrderCommandHandler>());
 
-            builder.Services.Configure<ServiceBusOption>(
-                builder.Configuration.GetSection(nameof(ServiceBusOption)));
-            builder.Services.AddSingleton<ServiceBusOption>(sp =>
-            {
-                IOptions<ServiceBusOption> optionsServiceBus = sp.GetRequiredService<IOptions<ServiceBusOption>>();
-                return optionsServiceBus.Value;
-
-            });
+   
 
             string connectionString = builder.Configuration.GetConnectionString("Database");
 
