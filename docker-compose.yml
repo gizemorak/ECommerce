@@ -1,12 +1,25 @@
 services:
-  orderapi:
+   orderapi:
     image: ${DOCKER_REGISTRY-}orderapi
     build:
       context: .
       dockerfile: Order.Api/Dockerfile
-  rabbitmq:
-   image: rabbitmq:3.12.2-management
-  mssql:
+    depends_on:
+      - mssql
+      - rabbitmq
+
+   workerservice:
+    image: ${DOCKER_REGISTRY-}workerservice
+    build:
+      context: .
+      dockerfile: WorkerService/Dockerfile
+    depends_on:
+      - mssql
+      - rabbitmq
+
+   rabbitmq:
+    image: rabbitmq:3.12.2-management
+   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql
     ports:
