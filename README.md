@@ -44,123 +44,153 @@ The solution follows Clean Architecture principles with the following structure:
 
 ```
 ECommerce/
-??? Order.Api/
-?   ??? Endpoints/       # Route definitions and handlers
-?   ?   ??? Orders/
-?   ?   ?   ??? SendOrderEndpoint.cs
-?   ?   ?   ??? CancelOrderEndpoint.cs
-?   ?   ??? OrderEndpoints.cs
-?   ??? Extensions/    # Dependency Injection & Middleware
-?   ?   ??? ServiceCollectionExtensions.cs
-?   ?   ??? ApplicationBuilderExtensions.cs
-?   ?   ??? AuthenticationExtensions.cs
-?   ?   ??? AuthorizationExtensions.cs
-?   ?   ??? DbContextExtensions.cs
-?   ?   ??? ApiVersioningExtensions.cs
-?   ?   ??? HealthCheckExtensions.cs
-?   ?   ??? FluentValidationExtensions.cs
-?   ?   ??? RateLimitingExtensions.cs
-?   ??? Middleware/  # Custom middleware
-?   ?   ??? RateLimitingMiddleware.cs
-?   ??? Services/           # Business logic
-?   ?   ??? TokenService.cs
-?   ??? Options/   # Configuration models
-?   ?   ??? JwtOptions.cs
-?   ?   ??? RateLimitOptions.cs
-?   ??? Program.cs       # Application entry point
-?   ??? appsettings.json        # Configuration
-?   ??? appsettings.Development.json # Dev Configuration
-?   ??? Order.Api.http     # HTTP test file
-?   ??? OrderApi.csproj      # Project file
-?   ??? Dockerfile        # Container configuration
-?
-??? Order.Application/               # Application Layer
-?   ??? Orders/
-?   ?   ??? Commands/         # Write operations
-?   ?   ?   ??? CreateOrder/
-?   ?   ?   ?   ??? CreateOrderCommand.cs
-?   ?   ?   ?   ??? CreateOrderCommandHandler.cs
-?   ?   ?   ?   ??? Validators/
-?   ?   ?   ?  ??? CreateOrderCommandValidator.cs
-?   ?   ?   ?     ??? AddressDtoValidator.cs
-?   ?   ?   ?   ??? OrderItemDtoValidator.cs
-?   ?   ?   ?       ??? PaymentDtoValidator.cs
-?   ?   ?   ??? CancelOrder/
-?   ?   ?       ??? CancelOrderCommand.cs
-?   ?   ?       ??? CancelOrderCommandHandler.cs
-?   ?   ?       ??? Validators/
-?   ?   ?           ??? CancelOrderCommandValidator.cs
-?   ?   ??? Queries/        # Read operations
-?   ?   ?   ??? GetOrder/
-?   ?   ?       ??? GetByIdOrderCommand.cs
-?   ?   ?       ??? GetByIdOrderCommandHandler.cs
-?   ?   ?       ??? Validators/
-?   ?   ?           ??? GetByIdOrderCommandValidator.cs
-?   ?   ??? DTOs/      # Data Transfer Objects
-?   ?       ??? OrderDto.cs
-?   ?       ??? OrderItemDto.cs
-?   ?       ??? OrderStatus.cs
-?   ?       ??? CreatedOrderDto.cs
-?   ?    ??? ProductOrderDto.cs
-?   ?       ??? AdressDto.cs
-?   ??? Services/             # Application services
-?   ?   ??? IPaymentService.cs
-?   ?   ??? PaymentService.cs
-?   ??? ServiceResult.cs       # Service result wrapper
-?   ??? OrderApplication.csproj      # Project file
-?
-??? Order.Domain/  # Domain Layer
-?   ??? Orders/          # Domain Entities
-?   ?   ??? Order.cs
-?   ?   ??? OrderItem.cs
-?   ?   ??? Address.cs
-?   ?   ??? OrderStatus.cs
-?   ??? Repositories/        # Repository Interfaces
-?   ?   ??? IOrderRepository.cs
-?   ?   ??? IUnitOfWork.cs
-?   ??? Entity.cs        # Base entity
-?   ??? IAggregateRoot.cs    # Aggregate root interface
-?   ??? ValueObject.cs               # Base value object
-?   ??? Idempotency.cs     # Idempotency model
-?   ??? EventType.cs       # Event type enum
-?   ??? OrderDomain.csproj           # Project file
-?
-??? OrderPersistence/       # Data Access Layer
-?   ??? Repositories/                # Repository Implementations
-?   ?   ??? OrderRepository.cs
-?   ?   ??? UnitOfWork.cs
-?   ??? Configurations/   # EF Core Configurations
-?   ?   ??? OrderConfiguration.cs
-?   ? ??? OrderItemConfiguration.cs
-?   ??? Migrations/       # Database Migrations
-?   ?   ??? [Migration files]
-?   ??? ApplicationDbContext.cs       # EF Core DbContext
-?   ??? AssemblyReference.cs       # Assembly registration
-?   ??? OrderPersistence.csproj       # Project file
-?
-??? Bus.Shared/    # Shared Infrastructure
-?   ??? Events/         # Domain Events
-?   ? ??? BaseEvent.cs
-?   ?   ??? OrderCreatedEvent.cs
-? ??? Options/          # Configuration Options
-?   ?   ??? ServiceBusOption.cs
-?   ??? RabbitMqBusService.cs        # Message Broker Service
-?   ??? IBusService.cs               # Bus service interface
-?   ??? Bus.Shared.csproj            # Project file
-?
-??? WorkerService/        # Background Processing
-?   ??? Consumers/       # Event Consumers
-?   ?   ??? OrderCreatedEventConsumer.cs
-?   ??? Program.cs # Worker Configuration
-?   ??? appsettings.json    # Configuration
-?   ??? WorkerService.csproj         # Project file
-?   ??? Dockerfile              # Container Configuration
-?
-??? docker-compose.yml        # Docker Compose Configuration
-??? README.md    # Documentation
-??? .gitignore        # Git ignore rules
-??? [Solution file]
+|
++-- Order.Api/
+|   +-- Endpoints/  # Route definitions and handlers
+|   |   +-- Orders/
+|   |   |   +-- SendOrderEndpoint.cs
+|   |   |   +-- CancelOrderEndpoint.cs
+|   |   +-- OrderEndpoints.cs
+|   |
+|   +-- Extensions/      # Dependency Injection & Middleware
+|   |   +-- ServiceCollectionExtensions.cs
+|   |   +-- ApplicationBuilderExtensions.cs
+|   |   +-- AuthenticationExtensions.cs
+|   |   +-- AuthorizationExtensions.cs
+|   |   +-- DbContextExtensions.cs
+|   |   +-- ApiVersioningExtensions.cs
+|   |   +-- HealthCheckExtensions.cs
+|   |   +-- FluentValidationExtensions.cs
+|   |   +-- RateLimitingExtensions.cs
+|   |
+|   +-- Middleware/ # Custom middleware
+|   |   +-- RateLimitingMiddleware.cs
+|   |
+|   +-- Services/        # Business logic
+|   |   +-- TokenService.cs
+|   |
+|   +-- Options/     # Configuration models
+|   |   +-- JwtOptions.cs
+|   |   +-- RateLimitOptions.cs
+|   |
+|   +-- Program.cs# Application entry point
+|   +-- appsettings.json
+|   +-- appsettings.Development.json
+|+-- Order.Api.http
+|   +-- OrderApi.csproj
+|   +-- Dockerfile
+|
++-- Order.Application/       # Application Layer
+|   +-- Orders/
+| |   +-- Commands/
+|   |   |   +-- CreateOrder/
+|   |   |   |   +-- CreateOrderCommand.cs
+|   |   |   |   +-- CreateOrderCommandHandler.cs
+|   |   |   |   +-- Validators/
+|   |   |   |    +-- CreateOrderCommandValidator.cs
+|   |   |   |       +-- AddressDtoValidator.cs
+|   |   |   | +-- OrderItemDtoValidator.cs
+|   ||   |       +-- PaymentDtoValidator.cs
+|   |   |   |
+|   |   |   +-- CancelOrder/
+|   |   |       +-- CancelOrderCommand.cs
+| |   |       +-- CancelOrderCommandHandler.cs
+|   |   |       +-- Validators/
+|   |   |+-- CancelOrderCommandValidator.cs
+|   |   |
+|   |   +-- Queries/
+|   |   |   +-- GetOrder/
+|   | |       +-- GetByIdOrderCommand.cs
+|   |   |     +-- GetByIdOrderCommandHandler.cs
+|   | |       +-- Validators/
+|   |   |           +-- GetByIdOrderCommandValidator.cs
+|   |   |
+|   |   +-- DTOs/
+|   |       +-- OrderDto.cs
+|   |       +-- OrderItemDto.cs
+|   |       +-- OrderStatus.cs
+|   |       +-- CreatedOrderDto.cs
+|   |       +-- ProductOrderDto.cs
+|   |       +-- AdressDto.cs
+|   |
+|   +-- Services/
+|   |   +-- IPaymentService.cs
+|   |   +-- PaymentService.cs
+|   |
+|   +-- ServiceResult.cs
+|   +-- OrderApplication.csproj
+|
++-- Order.Domain/ # Domain Layer
+|   +-- Orders/
+|   |   +-- Order.cs
+|   |   +-- OrderItem.cs
+|   |   +-- Address.cs
+|   |   +-- OrderStatus.cs
+|   |
+|   +-- Repositories/
+|   |   +-- IOrderRepository.cs
+|   |   +-- IUnitOfWork.cs
+| |
+|   +-- Entity.cs
+|   +-- IAggregateRoot.cs
+|   +-- ValueObject.cs
+|   +-- Idempotency.cs
+|   +-- EventType.cs
+|   +-- OrderDomain.csproj
+|
++-- OrderPersistence/    # Data Access Layer
+|   +-- Repositories/
+|   |   +-- OrderRepository.cs
+|   |   +-- UnitOfWork.cs
+|   |
+|   +-- Configurations/
+|   |   +-- OrderConfiguration.cs
+|   |   +-- OrderItemConfiguration.cs
+|   |
+|   +-- Migrations/
+|   |   +-- [Migration files]
+|   |
+|   +-- ApplicationDbContext.cs
+|   +-- AssemblyReference.cs
+|   +-- OrderPersistence.csproj
+|
++-- Bus.Shared/      # Shared Infrastructure
+|   +-- Events/
+|   |   +-- BaseEvent.cs
+|   |   +-- OrderCreatedEvent.cs
+|   |
+|   +-- Options/
+|   |   +-- ServiceBusOption.cs
+|   |
+|   +-- RabbitMqBusService.cs
+|   +-- IBusService.cs
+|   +-- Bus.Shared.csproj
+|
++-- WorkerService/     # Background Processing
+|   +-- Consumers/
+|   |   +-- OrderCreatedEventConsumer.cs
+|   |
+|   +-- Program.cs
+|   +-- appsettings.json
+|   +-- WorkerService.csproj
+|   +-- Dockerfile
+|
++-- docker-compose.yml
++-- README.md
++-- .gitignore
 ```
+
+### Key Directories Explained
+
+| Directory | Purpose |
+|-----------|---------|
+| `Order.Api/Endpoints` | REST API route definitions organized by domain |
+| `Order.Api/Extensions` | Service registration and middleware configuration |
+| `Order.Application/Orders` | Commands, Queries, DTOs, and Validators following CQRS pattern |
+| `Order.Domain` | Core business entities and repository interfaces |
+| `OrderPersistence` | EF Core implementation, migrations, and configurations |
+| `Bus.Shared` | Event definitions and message broker service |
+| `WorkerService/Consumers` | Background event consumers for async processing |
 
 ### Layer Dependencies
 
@@ -168,7 +198,7 @@ ECommerce/
 graph LR
     API[Order.Api]
     APP[Order.Application]
-    DOMAIN[Order.Domain]
+ DOMAIN[Order.Domain]
     DATA[OrderPersistence]
     SHARED[Bus.Shared]
     WORKER[WorkerService]
@@ -181,7 +211,7 @@ graph LR
     DATA -->|Uses| DOMAIN
     WORKER -->|Uses| APP
     WORKER -->|Uses| DATA
-WORKER -->|Uses| SHARED
+    WORKER -->|Uses| SHARED
 ```
 
 ## Prerequisites
