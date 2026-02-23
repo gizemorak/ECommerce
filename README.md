@@ -20,61 +20,145 @@ A modern, scalable e-commerce microservices architecture built with .NET 9, feat
 
 This solution follows a **microservices architecture** with event-driven communication:
 
+```mermaid
+graph TD
+    A[Order.Api<br/>REST API with JWT Auth] -->|Publish Events| B[RabbitMQ<br/>Message Broker]
+    B -->|Consume Events| C[WorkerService<br/>Background Event Processing]
+    C -->|Process Orders| D[Payment Service]
+    D -->|Save Data| E[SQL Server<br/>Database]
+    A -->|Query/Command| E
 ```
-???????????????????
-?   Order.Api   ? (REST API with JWT Auth)
-???????????????????
-         ?
-  ???? RabbitMQ (Message Broker)
-      ?
-    ?????????????????????????
-    ?  WorkerService        ? (Background Event Processing)
- ?  (OrderCreatedEvent)  ?
-    ?????????????????????????
-    ?
-   ???? Payment Service
-         ???? Database (SQL Server)
-```
+
+**Key Components:**
+- **Order.Api**: REST API with authentication, validation, and rate limiting
+- **RabbitMQ**: Event-driven messaging for decoupled communication
+- **WorkerService**: Background worker processing order events
+- **Payment Service**: Handles payment processing logic
+- **SQL Server**: Persistent data storage
 
 ## Project Structure
 
+The solution follows Clean Architecture principles with the following structure:
+
+### Directory Tree
+
 ```
 ECommerce/
-??? Order.Api/ # REST API Layer
-?   ??? Endpoints/        # Route definitions
-?   ??? Extensions/       # DI & middleware setup
-?   ??? Middleware/       # Custom middleware
-?   ??? Services/  # Business services
-?   ??? Options/        # Configuration classes
+??? Order.Api/
+?   ??? Endpoints/    - Route definitions and handlers
+?   ?   ??? Orders/
+?   ?   ?   ??? SendOrderEndpoint.cs
+?   ?   ?   ??? CancelOrderEndpoint.cs
+?   ?   ? ??? Validators/
+?   ?   ??? OrderEndpoints.cs
+?   ??? Extensions/             - Dependency Injection & Middleware
+?   ?   ??? ServiceCollectionExtensions.cs
+?   ?   ??? ApplicationBuilderExtensions.cs
+?   ?   ??? AuthenticationExtensions.cs
+?   ?   ??? AuthorizationExtensions.cs
+?   ?   ??? DbContextExtensions.cs
+?   ?   ??? ...more extensions
+?   ??? Middleware/             - Custom middleware
+?   ?   ??? RateLimitingMiddleware.cs
+?   ??? Services/ - Business logic
+?   ?   ??? TokenService.cs
+?   ?   ??? PaymentService.cs
+?   ??? Options/    - Configuration models
+?   ?   ??? JwtOptions.cs
+?   ?   ??? RateLimitOptions.cs
+?   ??? Program.cs              - Application entry point
+?   ??? appsettings.json  - Configuration
+?   ??? Dockerfile     - Container configuration
 ?
-??? Order.Application/    # Application Layer
+??? Order.Application/          - Application Layer
 ?   ??? Orders/
-?   ?   ??? Commands/   # Write operations
-?   ?   ??? Queries/      # Read operations
-?   ?   ??? Validators/   # FluentValidation
-?   ?   ??? DTOs/# Data Transfer Objects
-?   ??? Services/     # Domain services
+?   ?   ??? Commands/           - Write operations
+?   ?   ?   ??? CreateOrder/
+?   ?   ?   ?   ??? CreateOrderCommand.cs
+?   ?   ?   ?   ??? CreateOrderCommandHandler.cs
+?   ?   ?   ?   ??? Validators/
+?   ?   ?   ??? CancelOrder/
+?   ?   ?    ??? CancelOrderCommand.cs
+?   ?   ?       ??? CancelOrderCommandHandler.cs
+?   ?   ?       ??? Validators/
+?   ?   ??? Queries/      - Read operations
+?   ?   ?   ??? GetOrder/
+?   ?   ?       ??? GetByIdOrderCommand.cs
+?   ?   ?   ??? GetByIdOrderCommandHandler.cs
+?   ?   ?  ??? Validators/
+?   ?   ??? DTOs/   - Data Transfer Objects
+?   ?   ?   ??? OrderDto.cs
+?   ?   ?   ??? OrderItemDto.cs
+?   ?   ?   ??? ...
+?   ?   ??? Validators/      - FluentValidation
+?   ??? Services/  - Application services
 ?
-??? Order.Domain/       # Domain Layer
-?   ??? Orders/    # Domain models
-?   ??? Repositories/     # Repository interfaces
-?   ??? Events/           # Domain events
+??? Order.Domain/               - Domain Layer
+?   ??? Orders/     - Domain Entities
+?   ?   ??? Order.cs
+?   ?   ??? OrderItem.cs
+?   ?   ??? Address.cs
+?   ?   ??? OrderStatus.cs
+?   ??? Repositories/           - Repository Interfaces
+?   ?   ??? IOrderRepository.cs
+?   ?   ??? IUnitOfWork.cs
+?   ??? Events/          - Domain Events
+?   ?   ??? ...event definitions
+?   ??? ValueObjects/           - Value Objects
 ?
-??? OrderPersistence/     # Data Access Layer
-?   ??? Configurations/   # EF Core mappings
-?   ??? Repositories/     # Repository implementations
-?   ??? Migrations/       # Database migrations
-?   ??? ApplicationDbContext.cs  # EF Core context
+??? OrderPersistence/     - Data Access Layer
+?   ??? Repositories/- Repository Implementations
+?   ?   ??? OrderRepository.cs
+?   ?   ??? UnitOfWork.cs
+?   ??? Configurations/         - EF Core Configurations
+?   ?   ??? OrderConfiguration.cs
+?   ?   ??? OrderItemConfiguration.cs
+?   ??? Migrations/             - Database Migrations
+?   ?   ??? ...migration files
+?   ??? ApplicationDbContext.cs - EF Core DbContext
+?   ??? AssemblyReference.cs
 ?
-??? Bus.Shared/           # Shared Infrastructure
-?   ??? Events/       # Domain events
-?   ??? RabbitMqBusService.cs   # Message broker service
+??? Bus.Shared/                 - Shared Infrastructure
+?   ??? Events/        - Domain Events
+?   ?   ??? BaseEvent.cs
+?   ?   ??? OrderCreatedEvent.cs
+?   ??? Options/      - Configuration Options
+?   ?   ??? ServiceBusOption.cs
+?   ??? RabbitMqBusService.cs   - Message Broker Service
 ?
-??? WorkerService/        # Background Processing
-?   ??? Consumers/        # Message consumers
-?   ??? Program.cs    # Worker configuration
+??? WorkerService/         - Background Processing
+?   ??? Consumers/         - Event Consumers
+?   ?   ??? OrderCreatedEventConsumer.cs
+?   ??? Program.cs   - Worker Configuration
+?   ??? Dockerfile            - Container Configuration
+?   ??? appsettings.json
 ?
-??? README.md  # This file
+??? docker-compose.yml          - Docker Compose Configuration
+??? README.md    - This documentation
+??? .gitignore
+```
+
+### Layer Dependencies
+
+```mermaid
+graph LR
+    API[Order.Api]
+    APP[Order.Application]
+    DOMAIN[Order.Domain]
+  DATA[OrderPersistence]
+    SHARED[Bus.Shared]
+    WORKER[WorkerService]
+    
+    API --> APP
+    API --> DATA
+    API --> SHARED
+    APP --> DOMAIN
+    APP --> SHARED
+    DATA --> DOMAIN
+ WORKER --> APP
+    WORKER --> DATA
+    WORKER --> SHARED
+    SHARED --> |No Dependencies|SHARED
 ```
 
 ## Prerequisites
@@ -111,7 +195,7 @@ Update `Order.Api/appsettings.json`:
 ```json
 {
   "ConnectionStrings": {
-    "Database": "Server=localhost;Database=ECommerceDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=true;"
+  "Database": "Server=localhost;Database=ECommerceDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=true;"
   },
   "JwtOptions": {
     "Issuer": "ecommerce-api",
@@ -128,7 +212,7 @@ Update `Order.Api/appsettings.json`:
   "RateLimitOptions": {
     "PermitLimit": 100,
     "WindowInSeconds": 60,
-    "QueueLimit": 2
+"QueueLimit": 2
   }
 }
 ```
@@ -236,7 +320,7 @@ Authorization: Bearer <token>
     {
       "productId": "prod-123",
       "productName": "Laptop",
- "price": 999.99
+  "price": 999.99
     }
   ],
   "payment": {
@@ -374,27 +458,24 @@ dotnet test
 
 ### Project Dependencies
 
-```
-Order.Api
-??? Order.Application
-??? OrderPersistence
-??? Bus.Shared
-
-Order.Application
-??? Order.Domain
-??? Bus.Shared
-
-OrderPersistence
-??? Order.Domain
-??? (EF Core)
-
-WorkerService
-??? Order.Application
-??? OrderPersistence
-??? Bus.Shared
-
-Bus.Shared
-??? (No dependencies)
+```mermaid
+graph TD
+    A[Order.Api]
+    B[Order.Application]
+    C[Order.Domain]
+    D[OrderPersistence]
+    E[Bus.Shared]
+    F[WorkerService]
+    
+    A -->|Depends On| B
+    A -->|Depends On| D
+    A -->|Depends On| E
+    B -->|Depends On| C
+    B -->|Depends On| E
+  D -->|Depends On| C
+    F -->|Depends On| B
+    F -->|Depends On| D
+F -->|Depends On| E
 ```
 
 ## Docker Deployment
@@ -486,7 +567,7 @@ lsof -i :5001  # macOS/Linux
 netstat -ano | findstr :5001  # Windows
 
 # Kill process
-kill -9 <PID># macOS/Linux
+kill -9 <PID>  # macOS/Linux
 taskkill /PID <PID> /F  # Windows
 ```
 
