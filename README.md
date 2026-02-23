@@ -45,97 +45,121 @@ The solution follows Clean Architecture principles with the following structure:
 ```
 ECommerce/
 ??? Order.Api/
-?   ??? Endpoints/    - Route definitions and handlers
+?   ??? Endpoints/       # Route definitions and handlers
 ?   ?   ??? Orders/
 ?   ?   ?   ??? SendOrderEndpoint.cs
 ?   ?   ?   ??? CancelOrderEndpoint.cs
-?   ?   ? ??? Validators/
 ?   ?   ??? OrderEndpoints.cs
-?   ??? Extensions/             - Dependency Injection & Middleware
+?   ??? Extensions/    # Dependency Injection & Middleware
 ?   ?   ??? ServiceCollectionExtensions.cs
 ?   ?   ??? ApplicationBuilderExtensions.cs
 ?   ?   ??? AuthenticationExtensions.cs
 ?   ?   ??? AuthorizationExtensions.cs
 ?   ?   ??? DbContextExtensions.cs
-?   ?   ??? ...more extensions
-?   ??? Middleware/             - Custom middleware
+?   ?   ??? ApiVersioningExtensions.cs
+?   ?   ??? HealthCheckExtensions.cs
+?   ?   ??? FluentValidationExtensions.cs
+?   ?   ??? RateLimitingExtensions.cs
+?   ??? Middleware/  # Custom middleware
 ?   ?   ??? RateLimitingMiddleware.cs
-?   ??? Services/ - Business logic
+?   ??? Services/           # Business logic
 ?   ?   ??? TokenService.cs
-?   ?   ??? PaymentService.cs
-?   ??? Options/    - Configuration models
+?   ??? Options/   # Configuration models
 ?   ?   ??? JwtOptions.cs
 ?   ?   ??? RateLimitOptions.cs
-?   ??? Program.cs              - Application entry point
-?   ??? appsettings.json  - Configuration
-?   ??? Dockerfile     - Container configuration
+?   ??? Program.cs       # Application entry point
+?   ??? appsettings.json        # Configuration
+?   ??? appsettings.Development.json # Dev Configuration
+?   ??? Order.Api.http     # HTTP test file
+?   ??? OrderApi.csproj      # Project file
+?   ??? Dockerfile        # Container configuration
 ?
-??? Order.Application/          - Application Layer
+??? Order.Application/               # Application Layer
 ?   ??? Orders/
-?   ?   ??? Commands/           - Write operations
+?   ?   ??? Commands/         # Write operations
 ?   ?   ?   ??? CreateOrder/
 ?   ?   ?   ?   ??? CreateOrderCommand.cs
 ?   ?   ?   ?   ??? CreateOrderCommandHandler.cs
 ?   ?   ?   ?   ??? Validators/
+?   ?   ?   ?  ??? CreateOrderCommandValidator.cs
+?   ?   ?   ?     ??? AddressDtoValidator.cs
+?   ?   ?   ?   ??? OrderItemDtoValidator.cs
+?   ?   ?   ?       ??? PaymentDtoValidator.cs
 ?   ?   ?   ??? CancelOrder/
-?   ?   ?    ??? CancelOrderCommand.cs
+?   ?   ?       ??? CancelOrderCommand.cs
 ?   ?   ?       ??? CancelOrderCommandHandler.cs
 ?   ?   ?       ??? Validators/
-?   ?   ??? Queries/      - Read operations
+?   ?   ?           ??? CancelOrderCommandValidator.cs
+?   ?   ??? Queries/        # Read operations
 ?   ?   ?   ??? GetOrder/
 ?   ?   ?       ??? GetByIdOrderCommand.cs
-?   ?   ?   ??? GetByIdOrderCommandHandler.cs
-?   ?   ?  ??? Validators/
-?   ?   ??? DTOs/   - Data Transfer Objects
-?   ?   ?   ??? OrderDto.cs
-?   ?   ?   ??? OrderItemDto.cs
-?   ?   ?   ??? ...
-?   ?   ??? Validators/      - FluentValidation
-?   ??? Services/  - Application services
+?   ?   ?       ??? GetByIdOrderCommandHandler.cs
+?   ?   ?       ??? Validators/
+?   ?   ?           ??? GetByIdOrderCommandValidator.cs
+?   ?   ??? DTOs/      # Data Transfer Objects
+?   ?       ??? OrderDto.cs
+?   ?       ??? OrderItemDto.cs
+?   ?       ??? OrderStatus.cs
+?   ?       ??? CreatedOrderDto.cs
+?   ?    ??? ProductOrderDto.cs
+?   ?       ??? AdressDto.cs
+?   ??? Services/             # Application services
+?   ?   ??? IPaymentService.cs
+?   ?   ??? PaymentService.cs
+?   ??? ServiceResult.cs       # Service result wrapper
+?   ??? OrderApplication.csproj      # Project file
 ?
-??? Order.Domain/               - Domain Layer
-?   ??? Orders/     - Domain Entities
+??? Order.Domain/  # Domain Layer
+?   ??? Orders/          # Domain Entities
 ?   ?   ??? Order.cs
 ?   ?   ??? OrderItem.cs
 ?   ?   ??? Address.cs
 ?   ?   ??? OrderStatus.cs
-?   ??? Repositories/           - Repository Interfaces
+?   ??? Repositories/        # Repository Interfaces
 ?   ?   ??? IOrderRepository.cs
 ?   ?   ??? IUnitOfWork.cs
-?   ??? Events/          - Domain Events
-?   ?   ??? ...event definitions
-?   ??? ValueObjects/           - Value Objects
+?   ??? Entity.cs        # Base entity
+?   ??? IAggregateRoot.cs    # Aggregate root interface
+?   ??? ValueObject.cs               # Base value object
+?   ??? Idempotency.cs     # Idempotency model
+?   ??? EventType.cs       # Event type enum
+?   ??? OrderDomain.csproj           # Project file
 ?
-??? OrderPersistence/     - Data Access Layer
-?   ??? Repositories/- Repository Implementations
+??? OrderPersistence/       # Data Access Layer
+?   ??? Repositories/                # Repository Implementations
 ?   ?   ??? OrderRepository.cs
 ?   ?   ??? UnitOfWork.cs
-?   ??? Configurations/         - EF Core Configurations
+?   ??? Configurations/   # EF Core Configurations
 ?   ?   ??? OrderConfiguration.cs
-?   ?   ??? OrderItemConfiguration.cs
-?   ??? Migrations/             - Database Migrations
-?   ?   ??? ...migration files
-?   ??? ApplicationDbContext.cs - EF Core DbContext
-?   ??? AssemblyReference.cs
+?   ? ??? OrderItemConfiguration.cs
+?   ??? Migrations/       # Database Migrations
+?   ?   ??? [Migration files]
+?   ??? ApplicationDbContext.cs       # EF Core DbContext
+?   ??? AssemblyReference.cs       # Assembly registration
+?   ??? OrderPersistence.csproj       # Project file
 ?
-??? Bus.Shared/                 - Shared Infrastructure
-?   ??? Events/        - Domain Events
-?   ?   ??? BaseEvent.cs
+??? Bus.Shared/    # Shared Infrastructure
+?   ??? Events/         # Domain Events
+?   ? ??? BaseEvent.cs
 ?   ?   ??? OrderCreatedEvent.cs
-?   ??? Options/      - Configuration Options
+? ??? Options/          # Configuration Options
 ?   ?   ??? ServiceBusOption.cs
-?   ??? RabbitMqBusService.cs   - Message Broker Service
+?   ??? RabbitMqBusService.cs        # Message Broker Service
+?   ??? IBusService.cs               # Bus service interface
+?   ??? Bus.Shared.csproj            # Project file
 ?
-??? WorkerService/         - Background Processing
-?   ??? Consumers/         - Event Consumers
+??? WorkerService/        # Background Processing
+?   ??? Consumers/       # Event Consumers
 ?   ?   ??? OrderCreatedEventConsumer.cs
-?   ??? Program.cs   - Worker Configuration
-?   ??? Dockerfile            - Container Configuration
-?   ??? appsettings.json
+?   ??? Program.cs # Worker Configuration
+?   ??? appsettings.json    # Configuration
+?   ??? WorkerService.csproj         # Project file
+?   ??? Dockerfile              # Container Configuration
 ?
-??? docker-compose.yml          - Docker Compose Configuration
-??? README.md    - This documentation
-??? .gitignore
+??? docker-compose.yml        # Docker Compose Configuration
+??? README.md    # Documentation
+??? .gitignore        # Git ignore rules
+??? [Solution file]
 ```
 
 ### Layer Dependencies
@@ -145,20 +169,19 @@ graph LR
     API[Order.Api]
     APP[Order.Application]
     DOMAIN[Order.Domain]
-  DATA[OrderPersistence]
+    DATA[OrderPersistence]
     SHARED[Bus.Shared]
     WORKER[WorkerService]
     
-    API --> APP
-    API --> DATA
-    API --> SHARED
-    APP --> DOMAIN
-    APP --> SHARED
-    DATA --> DOMAIN
- WORKER --> APP
-    WORKER --> DATA
-    WORKER --> SHARED
-    SHARED --> |No Dependencies|SHARED
+    API -->|Uses| APP
+    API -->|Uses| DATA
+    API -->|Uses| SHARED
+    APP -->|Uses| DOMAIN
+    APP -->|Uses| SHARED
+    DATA -->|Uses| DOMAIN
+    WORKER -->|Uses| APP
+    WORKER -->|Uses| DATA
+WORKER -->|Uses| SHARED
 ```
 
 ## Prerequisites
