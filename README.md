@@ -2,7 +2,7 @@
 
 A modern, scalable e-commerce microservices architecture built with .NET 9, featuring order management, event-driven architecture, and comprehensive API security.
 
-## ?? Table of Contents
+## Table of Contents
 
 - [Architecture Overview](#architecture-overview)
 - [Project Structure](#project-structure)
@@ -16,7 +16,7 @@ A modern, scalable e-commerce microservices architecture built with .NET 9, feat
 - [Docker Deployment](#docker-deployment)
 - [Contributing](#contributing)
 
-## ??? Architecture Overview
+## Architecture Overview
 
 This solution follows a **microservices architecture** with event-driven communication:
 
@@ -26,64 +26,64 @@ This solution follows a **microservices architecture** with event-driven communi
 ???????????????????
          ?
   ???? RabbitMQ (Message Broker)
-         ?
+      ?
     ?????????????????????????
     ?  WorkerService        ? (Background Event Processing)
-    ?  (OrderCreatedEvent)  ?
+ ?  (OrderCreatedEvent)  ?
     ?????????????????????????
     ?
    ???? Payment Service
          ???? Database (SQL Server)
 ```
 
-## ?? Project Structure
+## Project Structure
 
 ```
 ECommerce/
-??? Order.Api/            # REST API Layer
-?   ??? Endpoints/  # Route definitions
-?   ??? Extensions/         # DI & middleware setup
-?   ??? Middleware/              # Custom middleware
+??? Order.Api/ # REST API Layer
+?   ??? Endpoints/        # Route definitions
+?   ??? Extensions/       # DI & middleware setup
+?   ??? Middleware/       # Custom middleware
 ?   ??? Services/  # Business services
 ?   ??? Options/        # Configuration classes
 ?
-??? Order.Application/            # Application Layer
-???? Orders/
-?   ?   ??? Commands/     # Write operations
-?   ? ??? Queries/        # Read operations
-?   ?   ??? Validators/          # FluentValidation
-?   ?   ??? DTOs/        # Data Transfer Objects
+??? Order.Application/    # Application Layer
+?   ??? Orders/
+?   ?   ??? Commands/   # Write operations
+?   ?   ??? Queries/      # Read operations
+?   ?   ??? Validators/   # FluentValidation
+?   ?   ??? DTOs/# Data Transfer Objects
 ?   ??? Services/     # Domain services
 ?
-??? Order.Domain/               # Domain Layer
-?   ??? Orders/       # Domain models
-?   ??? Repositories/   # Repository interfaces
-?   ??? Events/       # Domain events
+??? Order.Domain/       # Domain Layer
+?   ??? Orders/    # Domain models
+?   ??? Repositories/     # Repository interfaces
+?   ??? Events/           # Domain events
 ?
 ??? OrderPersistence/     # Data Access Layer
-?   ??? Configurations/     # EF Core mappings
-?   ??? Repositories/      # Repository implementations
+?   ??? Configurations/   # EF Core mappings
+?   ??? Repositories/     # Repository implementations
 ?   ??? Migrations/       # Database migrations
 ?   ??? ApplicationDbContext.cs  # EF Core context
 ?
-??? Bus.Shared/         # Shared Infrastructure
-?   ??? Events/         # Domain events
+??? Bus.Shared/           # Shared Infrastructure
+?   ??? Events/       # Domain events
 ?   ??? RabbitMqBusService.cs   # Message broker service
 ?
-??? WorkerService/          # Background Processing
-?   ??? Consumers/     # Message consumers
-?   ??? Program.cs # Worker configuration
+??? WorkerService/        # Background Processing
+?   ??? Consumers/        # Message consumers
+?   ??? Program.cs    # Worker configuration
 ?
-??? README.md# This file
+??? README.md  # This file
 ```
 
-## ?? Prerequisites
+## Prerequisites
 
-- **.NET 9 SDK** or later
-- **SQL Server 2019** or later
-- **RabbitMQ 3.x** or later
-- **Docker** (optional, for containerized deployment)
-- **Visual Studio 2022** or VS Code
+- .NET 9 SDK or later
+- SQL Server 2019 or later
+- RabbitMQ 3.x or later
+- Docker (optional, for containerized deployment)
+- Visual Studio 2022 or VS Code
 
 ### Required Services
 
@@ -95,7 +95,7 @@ docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourPassword123!" -p 1433:1433 mcr
 docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
 
-## ?? Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -115,20 +115,20 @@ Update `Order.Api/appsettings.json`:
   },
   "JwtOptions": {
     "Issuer": "ecommerce-api",
- "Audience": "ecommerce-client",
+    "Audience": "ecommerce-client",
     "SecretKey": "your-super-secret-key-that-is-at-least-32-characters-long-change-in-production",
     "ExpirationInMinutes": 60
   },
   "ServiceBusOption": {
-  "HostName": "localhost",
+    "HostName": "localhost",
     "Port": 5672,
- "UserName": "guest",
+    "UserName": "guest",
     "Password": "guest"
   },
   "RateLimitOptions": {
-  "PermitLimit": 100,
-  "WindowInSeconds": 60,
-  "QueueLimit": 2
+    "PermitLimit": 100,
+    "WindowInSeconds": 60,
+    "QueueLimit": 2
   }
 }
 ```
@@ -155,7 +155,7 @@ dotnet run
 API will be available at: `https://localhost:5001`
 Swagger UI: `https://localhost:5001/swagger/index.html`
 
-## ?? Configuration
+## Configuration
 
 ### JWT Authentication
 
@@ -165,8 +165,8 @@ Swagger UI: `https://localhost:5001/swagger/index.html`
 var tokenService = serviceProvider.GetRequiredService<ITokenService>();
 var token = tokenService.GenerateToken(
   userId: "user-123",
- email: "user@example.com",
-    roles: new[] { "User" }
+  email: "user@example.com",
+  roles: new[] { "User" }
 );
 ```
 
@@ -202,7 +202,7 @@ curl https://localhost:5001/health
 curl https://localhost:5001/health/ready
 ```
 
-## ?? API Documentation
+## API Documentation
 
 ### Base URL
 ```
@@ -236,12 +236,12 @@ Authorization: Bearer <token>
     {
       "productId": "prod-123",
       "productName": "Laptop",
-      "price": 999.99
+ "price": 999.99
     }
   ],
   "payment": {
     "cardNumber": "4532015112830366",
-  "cardHolderName": "John Doe",
+    "cardHolderName": "John Doe",
     "expiration": "12/25",
     "cvc": "123",
     "amount": 999.99
@@ -288,7 +288,7 @@ Authorization: Bearer <token>
     "orderStatus": "Completed",
     "totalPrice": 999.99,
     "buyerId": "550e8400-e29b-41d4-a716-446655440000"
-},
+  },
   "status": "200 OK"
 }
 ```
@@ -305,47 +305,47 @@ Authorization: Bearer <token>
 | 429  | Too Many Requests (Rate Limited) |
 | 500  | Internal Server Error |
 
-## ? Features
+## Features
 
 ### Order Management
-- ? Create orders with multiple items
-- ? Cancel orders
-- ? Retrieve order details
-- ? Order status tracking
+- [x] Create orders with multiple items
+- [x] Cancel orders
+- [x] Retrieve order details
+- [x] Order status tracking
 
 ### Authentication & Authorization
-- ? JWT-based authentication
-- ? Role-based authorization
-- ? Token generation service
-- ? Configurable token expiration
+- [x] JWT-based authentication
+- [x] Role-based authorization
+- [x] Token generation service
+- [x] Configurable token expiration
 
 ### Validation
-- ? FluentValidation integration
-- ? Request validation
-- ? Business rule validation
-- ? Custom error messages
+- [x] FluentValidation integration
+- [x] Request validation
+- [x] Business rule validation
+- [x] Custom error messages
 
 ### API Quality
-- ? API versioning
-- ? Health checks (liveness & readiness)
-- ? Comprehensive logging
-- ? Rate limiting (per-user & per-IP)
-- ? Swagger/OpenAPI documentation
+- [x] API versioning
+- [x] Health checks (liveness & readiness)
+- [x] Comprehensive logging
+- [x] Rate limiting (per-user & per-IP)
+- [x] Swagger/OpenAPI documentation
 
 ### Event-Driven Architecture
-- ? RabbitMQ message broker
-- ? Event publishing
-- ? Background event processing
-- ? Idempotency handling
-- ? Dead-letter queue (DLQ)
+- [x] RabbitMQ message broker
+- [x] Event publishing
+- [x] Background event processing
+- [x] Idempotency handling
+- [x] Dead-letter queue (DLQ)
 
 ### Database
-- ? Entity Framework Core
-- ? SQL Server
-- ? Automated migrations
-- ? Repository pattern
+- [x] Entity Framework Core
+- [x] SQL Server
+- [x] Automated migrations
+- [x] Repository pattern
 
-## ??? Technologies
+## Technologies
 
 | Technology | Purpose | Version |
 |-----------|---------|---------|
@@ -359,7 +359,7 @@ Authorization: Bearer <token>
 | JWT Bearer | Authentication | 9.0.0 |
 | Swagger/OpenAPI | API Documentation | 6.6.2 |
 
-## ?? Development
+## Development
 
 ### Running Tests (Future)
 ```bash
@@ -367,10 +367,10 @@ dotnet test
 ```
 
 ### Code Standards
-- ? Nullable reference types enabled
-- ? Implicit usings enabled
-- ? C# 13.0
-- ? Clean Architecture principles
+- [x] Nullable reference types enabled
+- [x] Implicit usings enabled
+- [x] C# 13.0
+- [x] Clean Architecture principles
 
 ### Project Dependencies
 
@@ -397,7 +397,7 @@ Bus.Shared
 ??? (No dependencies)
 ```
 
-## ?? Docker Deployment
+## Docker Deployment
 
 ### Build Images
 
@@ -421,7 +421,7 @@ This will start:
 - SQL Server (port 1433)
 - RabbitMQ (port 5672)
 
-## ?? Environment Variables
+## Environment Variables
 
 Create a `.env` file in the root directory:
 
@@ -442,7 +442,7 @@ JWT_AUDIENCE=ecommerce-client
 JWT_EXPIRATION_MINUTES=60
 ```
 
-## ?? Security Considerations
+## Security Considerations
 
 1. **JWT Secret**: Change the default secret key in production
 2. **Database Credentials**: Use environment variables
@@ -451,14 +451,14 @@ JWT_EXPIRATION_MINUTES=60
 5. **Input Validation**: All inputs are validated with FluentValidation
 6. **CORS**: Configure CORS policy for your frontend domain
 
-## ?? Additional Resources
+## Additional Resources
 
 - [.NET 9 Documentation](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [RabbitMQ Documentation](https://www.rabbitmq.com/documentation.html)
 - [JWT.io](https://jwt.io/)
 
-## ?? Troubleshooting
+## Troubleshooting
 
 ### Database Connection Issues
 ```bash
@@ -486,15 +486,15 @@ lsof -i :5001  # macOS/Linux
 netstat -ano | findstr :5001  # Windows
 
 # Kill process
-kill -9 <PID>  # macOS/Linux
+kill -9 <PID># macOS/Linux
 taskkill /PID <PID> /F  # Windows
 ```
 
-## ?? License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## ?? Contributing
+## Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -504,7 +504,7 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## ?? Support
+## Support
 
 For support, email support@ecommerce.com or open an issue on GitHub.
 
