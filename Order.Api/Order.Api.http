@@ -1,6 +1,279 @@
-@Order.Api_HostAddress = http://localhost:5261
+@baseUrl = https://localhost:5001
+@apiVersion = v1
+@token = your-jwt-token-here
 
-GET {{Order.Api_HostAddress}}/weatherforecast/
+### ============================================
+### AUTHENTICATION ENDPOINTS
+### ============================================
+
+### Generate JWT Token (Example - implement in your auth endpoint)
+# POST {{baseUrl}}/api/{{apiVersion}}/auth/login
+# Content-Type: application/json
+# 
+# {
+#   "email": "user@example.com",
+#   "password": "Password123!"
+# }
+
+### ============================================
+### HEALTH CHECK ENDPOINTS
+### ============================================
+
+### Liveness Check (Available to everyone)
+GET {{baseUrl}}/health
 Accept: application/json
 
+###
+
+### Readiness Check - Includes Database (Available to everyone)
+GET {{baseUrl}}/health/ready
+Accept: application/json
+
+### ============================================
+### ORDER ENDPOINTS
+### ============================================
+
+### Send New Order (Create Order)
+POST {{baseUrl}}/api/{{apiVersion}}/orders/send
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "adressdto": {
+    "street": "123 Main Street",
+    "city": "New York",
+    "state": "NY",
+    "country": "USA",
+  "zipCode": "10001"
+  },
+  "orderItems": [
+  {
+      "productId": "PROD-001",
+    "productName": "Laptop",
+      "price": 999.99
+    },
+    {
+      "productId": "PROD-002",
+      "productName": "Mouse",
+      "price": 29.99
+    }
+  ],
+  "payment": {
+    "cardNumber": "4532015112830366",
+    "cardHolderName": "John Doe",
+  "expiration": "12/25",
+    "cvc": "123",
+    "amount": 1029.98
+  }
+}
+
+###
+
+### Cancel Existing Order
+POST {{baseUrl}}/api/{{apiVersion}}/orders/cancel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "orderId": 1
+}
+
+###
+
+### Get Order Details
+GET {{baseUrl}}/api/{{apiVersion}}/orders/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+### ============================================
+### API VERSIONING TEST
+### ============================================
+
+### Send Order with Version Header
+POST {{baseUrl}}/api/v1/orders/send
+Content-Type: application/json
+Authorization: Bearer {{token}}
+x-api-version: 1.0
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "adressdto": {
+    "street": "456 Oak Avenue",
+    "city": "Los Angeles",
+    "state": "CA",
+    "country": "USA",
+    "zipCode": "90001"
+  },
+  "orderItems": [
+    {
+      "productId": "PROD-003",
+      "productName": "Keyboard",
+      "price": 89.99
+    }
+  ],
+  "payment": {
+    "cardNumber": "4532015112830366",
+    "cardHolderName": "Jane Smith",
+    "expiration": "06/26",
+    "cvc": "456",
+    "amount": 89.99
+  }
+}
+
+###
+
+### ============================================
+### ERROR TESTING
+### ============================================
+
+### Missing Required Fields (Should return 400)
+POST {{baseUrl}}/api/{{apiVersion}}/orders/send
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+###
+
+### Invalid Card Number (Should return 400)
+POST {{baseUrl}}/api/{{apiVersion}}/orders/send
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "adressdto": {
+    "street": "123 Main Street",
+    "city": "New York",
+    "state": "NY",
+    "country": "USA",
+    "zipCode": "10001"
+  },
+  "orderItems": [
+  {
+      "productId": "PROD-001",
+      "productName": "Laptop",
+      "price": 999.99
+    }
+  ],
+  "payment": {
+    "cardNumber": "1234",
+    "cardHolderName": "John Doe",
+    "expiration": "12/25",
+    "cvc": "123",
+    "amount": 999.99
+  }
+}
+
+###
+
+### Missing Authorization Header (Should return 401)
+POST {{baseUrl}}/api/{{apiVersion}}/orders/send
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "adressdto": {
+    "street": "123 Main Street",
+    "city": "New York",
+    "state": "NY",
+    "country": "USA",
+    "zipCode": "10001"
+  },
+  "orderItems": [
+    {
+      "productId": "PROD-001",
+      "productName": "Laptop",
+      "price": 999.99
+    }
+  ],
+  "payment": {
+    "cardNumber": "4532015112830366",
+    "cardHolderName": "John Doe",
+    "expiration": "12/25",
+    "cvc": "123",
+    "amount": 999.99
+  }
+}
+
+###
+
+### Get Non-Existent Order (Should return 404)
+GET {{baseUrl}}/api/{{apiVersion}}/orders/99999
+Accept: application/json
+Authorization: Bearer {{token}}
+
+###
+
+### ============================================
+### RATE LIMITING TEST
+### ============================================
+
+### Test Rate Limiting (Run multiple times quickly)
+POST {{baseUrl}}/api/{{apiVersion}}/orders/send
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "adressdto": {
+    "street": "123 Main Street",
+    "city": "New York",
+    "state": "NY",
+    "country": "USA",
+    "zipCode": "10001"
+  },
+  "orderItems": [
+    {
+ "productId": "PROD-001",
+      "productName": "Laptop",
+      "price": 999.99
+    }
+  ],
+  "payment": {
+    "cardNumber": "4532015112830366",
+    "cardHolderName": "John Doe",
+    "expiration": "12/25",
+ "cvc": "123",
+    "amount": 999.99
+  }
+}
+
+###
+
+### ============================================
+### NOTES
+### ============================================
+### 
+### 1. Replace {{token}} with your actual JWT token
+###    Token should be obtained from the authentication endpoint
+###
+### 2. BaseUrl is set to https://localhost:5001
+###    Change according to your environment
+###
+### 3. API Version: v1
+###    Can be specified in URL or via x-api-version header
+###
+### 4. All endpoints require:
+###    - Valid JWT token in Authorization header
+###    - Application/JSON content type
+###
+### 5. Rate Limiting:
+###    - 100 requests per 60 seconds per user/IP
+###    - Returns 429 Too Many Requests when exceeded
+###
+### 6. Validation Rules:
+###    - Card Number: 13-19 digits
+###    - Expiration: MM/YY format
+###    - CVC: 3-4 digits
+###    - ZipCode: 5 digits or 5+4 format
+###
+### 7. Health Checks:
+###    - /health: General API health
+###    - /health/ready: Includes database connectivity check
 ###

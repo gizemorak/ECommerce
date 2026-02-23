@@ -45,6 +45,12 @@ namespace OrderApplication.Orders.Queries.GetOrder
 
             var order=await _orderRepository.GetByIdAsync(request.OrderId);
 
+            if (order == null)
+            {
+                _logger.LogWarning("Order with ID {OrderId} not found", request.OrderId);
+                return ServiceResult.ErrorAsNotFound();
+            }
+
             var orderdto = new OrderDto();
 
             orderdto.OrderId = order.Id;

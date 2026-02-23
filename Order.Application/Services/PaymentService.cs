@@ -21,8 +21,8 @@ namespace OrderApplication.Services
         }
         public async Task CheckPayment(int OrderId, Guid BuyerId, decimal TotalPrice)
         {
-            //todo payment prosess
-            Console.WriteLine("Ödeme alındı");
+            // TODO: Implement payment processing logic
+            Console.WriteLine("Payment received");
 
             var order = await _orderRepository.GetByIdAsync(OrderId);
 
