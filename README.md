@@ -1,6 +1,6 @@
 # ECommerce Microservices Solution
 
-A modern, scalable e-commerce microservices architecture built with **.NET 9**, featuring order management, event-driven messaging, and a **Worker Service** for background processing.
+A modern, scalable e-commerce microservices architecture built with **.NET9**, featuring order management, event-driven messaging, and a **Worker Service** for background processing. The solution also includes a **.NET Aspire App Host** for orchestrating local development dependencies (SQL Server, RabbitMQ/Kafka/Redis, etc.).
 
 ## Table of Contents
 
@@ -8,8 +8,9 @@ A modern, scalable e-commerce microservices architecture built with **.NET 9**, 
 - [Project Structure](#project-structure)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
+- [Aspire App Host (Local Orchestration)](#aspire-app-host-local-orchestration)
 - [Configuration](#configuration)
-  - [Bus Selection (RabbitMQ / Kafka / Redis)](#bus-selection-rabbitmq--kafka--redis)
+ - [Bus Selection (RabbitMQ / Kafka / Redis)](#bus-selection-rabbitmq--kafka--redis)
 - [API Documentation](#api-documentation)
 - [Features](#features)
 - [Technologies](#technologies)
@@ -22,23 +23,23 @@ A modern, scalable e-commerce microservices architecture built with **.NET 9**, 
 
 This solution follows a **microservices architecture** with event-driven communication.
 
-> Note: The active message broker is configurable (RabbitMQ/Kafka/Redis). The diagrams below show RabbitMQ as an example.
+> Note: The active message broker is configurable (RabbitMQ/Kafka/Redis).
 
 ```mermaid
 graph TD
-    A[Order.Api<br/>REST API with JWT Auth] -->|Publish Events| B[RabbitMQ<br/>Message Broker]
-    B -->|Consume Events| C[WorkerService<br/>Background Event Processing]
-    C -->|Process Orders| D[Payment Service]
-    D -->|Save Data| E[SQL Server<br/>Database]
-    A -->|Query/Command| E
+ A[Order.Api<br/>REST API with JWT Auth] -->|Publish Events| B[Message Broker<br/>RabbitMQ / Kafka / Redis]
+ B -->|Consume Events| C[WorkerService<br/>Background Event Processing]
+ C -->|Process Orders| D[Payment Service]
+ D -->|Save Data| E[SQL Server<br/>Database]
+ A -->|Query/Command| E
 ```
 
 **Key Components:**
 - **Order.Api**: REST API with authentication, validation, and rate limiting
-- **RabbitMQ**: Event-driven messaging for decoupled communication
+- **Message Broker**: RabbitMQ / Kafka / Redis (selectable)
 - **WorkerService**: Background worker processing order events
-- **Payment Service**: Handles payment processing logic
 - **SQL Server**: Persistent data storage
+- **Aspire App Host**: Local orchestration and dependency wiring for development
 
 ## Project Structure
 
@@ -50,134 +51,139 @@ The solution follows Clean Architecture principles with the following structure:
 ECommerce/
 |
 +-- Order.Api/
-|   +-- Endpoints/  # Route definitions and handlers
-|   |   +-- Orders/
-|   |   |   +-- SendOrderEndpoint.cs
-|   |   |   +-- CancelOrderEndpoint.cs
-|   |   +-- OrderEndpoints.cs
-|   |
-|   +-- Extensions/      # Dependency Injection & Middleware
-|   |   +-- ServiceCollectionExtensions.cs
-|   |   +-- ApplicationBuilderExtensions.cs
-|   |   +-- AuthenticationExtensions.cs
-|   |   +-- AuthorizationExtensions.cs
-|   |   +-- DbContextExtensions.cs
-|   |   +-- ApiVersioningExtensions.cs
-|   |   +-- HealthCheckExtensions.cs
-|   |   +-- FluentValidationExtensions.cs
-|   |   +-- RateLimitingExtensions.cs
-|   |
-|   +-- Middleware/ # Custom middleware
-|   |   +-- RateLimitingMiddleware.cs
-|   |
-|   +-- Services/        # Business logic
-|   |   +-- TokenService.cs
-|   |
-|   +-- Options/     # Configuration models
-|   |   +-- JwtOptions.cs
-|   |   +-- RateLimitOptions.cs
-|   |
-|   +-- Program.cs# Application entry point
-|   +-- appsettings.json
-|   +-- appsettings.Development.json
+| +-- Endpoints/ # Route definitions and handlers
+| | +-- Orders/
+| | | +-- SendOrderEndpoint.cs
+| | | +-- CancelOrderEndpoint.cs
+| | +-- OrderEndpoints.cs
+| |
+| +-- Extensions/ # Dependency Injection & Middleware
+| | +-- ServiceCollectionExtensions.cs
+| | +-- ApplicationBuilderExtensions.cs
+| | +-- AuthenticationExtensions.cs
+| | +-- AuthorizationExtensions.cs
+| | +-- DbContextExtensions.cs
+| | +-- ApiVersioningExtensions.cs
+| | +-- HealthCheckExtensions.cs
+| | +-- FluentValidationExtensions.cs
+| | +-- RateLimitingExtensions.cs
+| |
+| +-- Middleware/ # Custom middleware
+| | +-- RateLimitingMiddleware.cs
+| |
+| +-- Services/ # Business logic
+| | +-- TokenService.cs
+| |
+| +-- Options/ # Configuration models
+| | +-- JwtOptions.cs
+| | +-- RateLimitOptions.cs
+| |
+| +-- Program.cs# Application entry point
+| +-- appsettings.json
+| +-- appsettings.Development.json
 |+-- Order.Api.http
-|   +-- OrderApi.csproj
-|   +-- Dockerfile
+| +-- OrderApi.csproj
+| +-- Dockerfile
 |
-+-- Order.Application/       # Application Layer
-|   +-- Orders/
-| |   +-- Commands/
-|   |   |   +-- CreateOrder/
-|   |   |   |   +-- CreateOrderCommand.cs
-|   |   |   |   +-- CreateOrderCommandHandler.cs
-|   |   |   |   +-- Validators/
-|   |   |   |    +-- CreateOrderCommandValidator.cs
-|   |   |   |       +-- AddressDtoValidator.cs
-|   |   |   | +-- OrderItemDtoValidator.cs
-|   ||   |       +-- PaymentDtoValidator.cs
-|   |   |   |
-|   |   |   +-- CancelOrder/
-|   |   |       +-- CancelOrderCommand.cs
-| |   |       +-- CancelOrderCommandHandler.cs
-|   |   |       +-- Validators/
-|   |   |+-- CancelOrderCommandValidator.cs
-|   |   |
-|   |   +-- Queries/
-|   |   |   +-- GetOrder/
-|   | |       +-- GetByIdOrderCommand.cs
-|   |   |     +-- GetByIdOrderCommandHandler.cs
-|   | |       +-- Validators/
-|   |   |           +-- GetByIdOrderCommandValidator.cs
-|   |   |
-|   |   +-- DTOs/
-|   |       +-- OrderDto.cs
-|   |       +-- OrderItemDto.cs
-|   |       +-- OrderStatus.cs
-|   |       +-- CreatedOrderDto.cs
-|   |       +-- ProductOrderDto.cs
-|   |       +-- AdressDto.cs
-|   |
-|   +-- Services/
-|   |   +-- IPaymentService.cs
-|   |   +-- PaymentService.cs
-|   |
-|   +-- ServiceResult.cs
-|   +-- OrderApplication.csproj
++-- Order.Application/ # Application Layer
+| +-- Orders/
+| | +-- Commands/
+| | | +-- CreateOrder/
+| | | | +-- CreateOrderCommand.cs
+| | | | +-- CreateOrderCommandHandler.cs
+| | | | +-- Validators/
+| | | | +-- CreateOrderCommandValidator.cs
+| | | | +-- AddressDtoValidator.cs
+| | | | +-- OrderItemDtoValidator.cs
+| || | +-- PaymentDtoValidator.cs
+| | | |
+| | | +-- CancelOrder/
+| | | +-- CancelOrderCommand.cs
+| | | +-- CancelOrderCommandHandler.cs
+| | | +-- Validators/
+| | |+-- CancelOrderCommandValidator.cs
+| | |
+| | +-- Queries/
+| | | +-- GetOrder/
+| | | +-- GetByIdOrderCommand.cs
+| | | +-- GetByIdOrderCommandHandler.cs
+| | | +-- Validators/
+| | | +-- GetByIdOrderCommandValidator.cs
+| | |
+| | +-- DTOs/
+| | +-- OrderDto.cs
+| | +-- OrderItemDto.cs
+| | +-- OrderStatus.cs
+| | +-- CreatedOrderDto.cs
+| | +-- ProductOrderDto.cs
+| | +-- AdressDto.cs
+| |
+| +-- Services/
+| | +-- IPaymentService.cs
+| | +-- PaymentService.cs
+| |
+| +-- ServiceResult.cs
+| +-- OrderApplication.csproj
 |
 +-- Order.Domain/ # Domain Layer
-|   +-- Orders/
-|   |   +-- Order.cs
-|   |   +-- OrderItem.cs
-|   |   +-- Address.cs
-|   |   +-- OrderStatus.cs
-|   |
-|   +-- Repositories/
-|   |   +-- IOrderRepository.cs
-|   |   +-- IUnitOfWork.cs
+| +-- Orders/
+| | +-- Order.cs
+| | +-- OrderItem.cs
+| | +-- Address.cs
+| | +-- OrderStatus.cs
 | |
-|   +-- Entity.cs
-|   +-- IAggregateRoot.cs
-|   +-- ValueObject.cs
-|   +-- Idempotency.cs
-|   +-- EventType.cs
-|   +-- OrderDomain.csproj
+| +-- Repositories/
+| | +-- IOrderRepository.cs
+| | +-- IUnitOfWork.cs
+| |
+| +-- Entity.cs
+| +-- IAggregateRoot.cs
+| +-- ValueObject.cs
+| +-- Idempotency.cs
+| +-- EventType.cs
+| +-- OrderDomain.csproj
 |
-+-- OrderPersistence/    # Data Access Layer
-|   +-- Repositories/
-|   |   +-- OrderRepository.cs
-|   |   +-- UnitOfWork.cs
-|   |
-|   +-- Configurations/
-|   |   +-- OrderConfiguration.cs
-|   |   +-- OrderItemConfiguration.cs
-|   |
-|   +-- Migrations/
-|   |   +-- [Migration files]
-|   |
-|   +-- ApplicationDbContext.cs
-|   +-- AssemblyReference.cs
-|   +-- OrderPersistence.csproj
++-- OrderPersistence/ # Data Access Layer
+| +-- Repositories/
+| | +-- OrderRepository.cs
+| | +-- UnitOfWork.cs
+| |
+| +-- Configurations/
+| | +-- OrderConfiguration.cs
+| | +-- OrderItemConfiguration.cs
+| |
+| +-- Migrations/
+| | +-- [Migration files]
+| |
+| +-- ApplicationDbContext.cs
+| +-- AssemblyReference.cs
+| +-- OrderPersistence.csproj
 |
-+-- Bus.Shared/      # Shared Infrastructure
-|   +-- Events/
-|   |   +-- BaseEvent.cs
-|   |   +-- OrderCreatedEvent.cs
-|   |
-|   +-- Options/
-|   |   +-- ServiceBusOption.cs
-|   |
-|   +-- RabbitMqBusService.cs
-|   +-- IBusService.cs
-|   +-- Bus.Shared.csproj
++-- Bus.Shared/ # Shared Infrastructure
+| +-- Events/
+| | +-- BaseEvent.cs
+| | +-- OrderCreatedEvent.cs
+| |
+| +-- Options/
+| | +-- ServiceBusOption.cs
+| |
+| +-- RabbitMqBusService.cs
+| +-- IBusService.cs
+| +-- Bus.Shared.csproj
 |
-+-- WorkerService/     # Background Processing
-|   +-- Consumers/
-|   |   +-- OrderCreatedEventConsumer.cs
-|   |
-|   +-- Program.cs
-|   +-- appsettings.json
-|   +-- WorkerService.csproj
-|   +-- Dockerfile
++-- WorkerService/ # Background Processing
+| +-- Consumers/
+| | +-- OrderCreatedEventConsumer.cs
+| |
+| +-- Program.cs
+| +-- appsettings.json
+| +-- WorkerService.csproj
+| +-- Dockerfile
+|
++-- ECommerceAppHost/ # .NET Aspire App Host (orchestrates local dependencies)
+| +-- appsettings.json # Parameters + resource configuration (e.g., BusParameter)
+| +-- AppHost.cs
+| +-- ECommerceAppHost.csproj
 |
 +-- docker-compose.yml
 +-- README.md
@@ -195,106 +201,133 @@ ECommerce/
 | `OrderPersistence` | EF Core implementation, migrations, and configurations |
 | `Bus.Shared` | Event definitions and message broker service |
 | `WorkerService/Consumers` | Background event consumers for async processing |
+| `ECommerceAppHost` | Aspire App Host project (local orchestration) |
 
 ### Layer Dependencies
 
 ```mermaid
 graph LR
-    API[Order.Api]
-    APP[Order.Application]
+ API[Order.Api]
+ APP[Order.Application]
  DOMAIN[Order.Domain]
-    DATA[OrderPersistence]
-    SHARED[Bus.Shared]
-    WORKER[WorkerService]
-    
-    API -->|Uses| APP
-    API -->|Uses| DATA
-    API -->|Uses| SHARED
-    APP -->|Uses| DOMAIN
-    APP -->|Uses| SHARED
-    DATA -->|Uses| DOMAIN
-    WORKER -->|Uses| APP
-    WORKER -->|Uses| DATA
-    WORKER -->|Uses| SHARED
+ DATA[OrderPersistence]
+ SHARED[Bus.Shared]
+ WORKER[WorkerService]
+
+ API -->|Uses| APP
+ API -->|Uses| DATA
+ API -->|Uses| SHARED
+ APP -->|Uses| DOMAIN
+ APP -->|Uses| SHARED
+ DATA -->|Uses| DOMAIN
+ WORKER -->|Uses| APP
+ WORKER -->|Uses| DATA
+ WORKER -->|Uses| SHARED
 ```
 
 ## Prerequisites
 
-- **.NET 9 SDK** or later
-- **SQL Server 2019** or later
-- **RabbitMQ 3.x** or later
-- **Docker** (optional, for containerized deployment)
-- **Visual Studio 2022** or **VS Code**
-
-### Required Services
-
-```bash
-# SQL Server
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=YourPassword123!" -p 1433:1433 mcr.microsoft.com/mssql/server:2019-latest
-
-# RabbitMQ
-docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-```
+- **.NET9 SDK** or later
+- **Docker Desktop** (recommended; used by Aspire to provision containers/resources)
+- **Visual Studio2022** or **VS Code**
+- If running manually (without Aspire):
+ - **SQL Server2019** or later
+ - **RabbitMQ3.x** and/or **Kafka** and/or **Redis** (depending on chosen bus)
 
 ## Getting Started
 
-### 1. Clone the Repository
+### Option A: Run with Aspire (recommended)
+
+1. Set `ECommerceAppHost` as the startup project.
+2. Run the solution (F5). The App Host will:
+ - start/provision backing services (containers/resources)
+ - start `Order.Api` and `WorkerService`
+ - wire connection strings/environment variables into the projects
+
+> App Host configuration lives in `ECommerceAppHost/appsettings.json`.
+
+### Option B: Run projects individually (manual)
+
+####1. Clone the Repository
 
 ```bash
 git clone https://github.com/gizemorak/ECommerce.git
 cd ECommerce
 ```
 
-### 2. Configure appsettings
+####2. Configure appsettings
 
 Update `Order.Api/appsettings.json`:
 
 ```json
 {
-  "ConnectionStrings": {
-  "Database": "Server=localhost;Database=ECommerceDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=true;"
-  },
-  "JwtOptions": {
-    "Issuer": "ecommerce-api",
-    "Audience": "ecommerce-client",
-    "SecretKey": "your-super-secret-key-that-is-at-least-32-characters-long-change-in-production",
-    "ExpirationInMinutes": 60
-  },
-  "ServiceBusOption": {
-    "HostName": "localhost",
-    "Port": 5672,
-    "UserName": "guest",
-    "Password": "guest"
-  },
-  "RateLimitOptions": {
-    "PermitLimit": 100,
-    "WindowInSeconds": 60,
-"QueueLimit": 2
-  }
+ "ConnectionStrings": {
+ "Database": "Server=localhost;Database=ECommerceDb;User Id=sa;Password=YourPassword123!;TrustServerCertificate=true;"
+ },
+ "JwtOptions": {
+ "Issuer": "ecommerce-api",
+ "Audience": "ecommerce-client",
+ "SecretKey": "your-super-secret-key-that-is-at-least-32-characters-long-change-in-production",
+ "ExpirationInMinutes":60
+ },
+ "ServiceBusOption": {
+ "HostName": "localhost",
+ "Port":5672,
+ "UserName": "guest",
+ "Password": "guest"
+ },
+ "RateLimitOptions": {
+ "PermitLimit":100,
+ "WindowInSeconds":60,
+ "QueueLimit":2
+ }
 }
 ```
 
-### 3. Create Database
+####3. Create Database
 
 ```bash
 cd Order.Api
 dotnet ef database update --project ../OrderPersistence/OrderPersistence.csproj
 ```
 
-### 4. Run the Solution
+####4. Run the Solution
 
 ```bash
-# Terminal 1: Order.Api
+# Terminal1: Order.Api
 cd Order.Api
 dotnet run
 
-# Terminal 2: WorkerService
+# Terminal2: WorkerService
 cd WorkerService
 dotnet run
 ```
 
 API will be available at: `https://localhost:5001`
 Swagger UI: `https://localhost:5001/swagger/index.html`
+
+## Aspire App Host (Local Orchestration)
+
+The **Aspire App Host** project (`ECommerceAppHost`) orchestrates the system for local development:
+- Centralizes configuration/parameters
+- Starts projects and dependencies together
+- Injects configuration into dependent projects via environment variables / connection strings
+
+Example `ECommerceAppHost/appsettings.json` (excerpt):
+
+```json
+{
+ "BusParameter": "Kafka",
+ "ServiceBusOption": {
+ "RabbitMqConnectionString": "amqp://rabbitmq:password12@rabbitmq:5672/",
+ "KafkaConnectionString": "kafka:9094",
+ "RedisOption": {
+ "Host": "redis",
+ "Port":6379
+ }
+ }
+}
+```
 
 ## Configuration
 
@@ -305,31 +338,54 @@ Swagger UI: `https://localhost:5001/swagger/index.html`
 // Use the TokenService in your auth endpoint
 var tokenService = serviceProvider.GetRequiredService<ITokenService>();
 var token = tokenService.GenerateToken(
-  userId: "user-123",
-  email: "user@example.com",
-  roles: new[] { "User" }
+ userId: "user-123",
+ email: "user@example.com",
+ roles: new[] { "User" }
 );
 ```
 
 **Use Token in Requests:**
 ```bash
 curl -H "Authorization: Bearer <token>" \
-  POST https://localhost:5001/api/v1/orders/send
+ POST https://localhost:5001/api/v1/orders/send
 ```
+
+### Bus Selection (RabbitMQ / Kafka / Redis)
+
+Bus selection is controlled via configuration.
+
+From `ECommerceAppHost/appsettings.json`:
+
+```json
+{
+ "BusParameter": "Kafka"
+}
+```
+
+**Valid values:** `RabbitMQ`, `Kafka`, `Redis`.
+
+#### Important: WorkerService key name
+In `WorkerService`, `ConditionalHostedService<TInner>` currently reads the key `BUS_TYPE` from configuration.
+
+If you set `BusParameter` in the App Host but never set `BUS_TYPE`, the worker may default to RabbitMQ (because parsing fails and it assigns `BusType.RabbitMQ`).
+
+To avoid mismatches, use one of the following:
+- Set `BUS_TYPE` (e.g., via Aspire environment injection), or
+- Update the worker to read `BusParameter`.
 
 ### Rate Limiting
 
 Global rate limiting is applied automatically:
 - **Authenticated Users**: Limited by UserID
 - **Anonymous Users**: Limited by IP Address
-- **Default**: 100 requests per 60 seconds
+- **Default**:100 requests per60 seconds
 
 Configure in `appsettings.json`:
 ```json
 "RateLimitOptions": {
-  "PermitLimit": 100,
-  "WindowInSeconds": 60,
-  "QueueLimit": 2
+ "PermitLimit":100,
+ "WindowInSeconds":60,
+ "QueueLimit":2
 }
 ```
 
@@ -358,64 +414,64 @@ Authorization: Bearer <token>
 
 ### Endpoints
 
-#### 1. Send Order
+####1. Send Order
 ```http
 POST /orders/send
 Content-Type: application/json
 Authorization: Bearer <token>
 
 {
-  "userId": "550e8400-e29b-41d4-a716-446655440000",
-  "adressdto": {
-    "street": "123 Main St",
-    "city": "New York",
-    "state": "NY",
-    "country": "USA",
-    "zipCode": "10001"
-  },
-  "orderItems": [
-    {
-      "productId": "prod-123",
-      "productName": "Laptop",
-  "price": 999.99
-    }
-  ],
-  "payment": {
-    "cardNumber": "4532015112830366",
-    "cardHolderName": "John Doe",
-    "expiration": "12/25",
-    "cvc": "123",
-    "amount": 999.99
-  }
+ "userId": "550e8400-e29b-41d4-a716-446655440000",
+ "adressdto": {
+ "street": "123 Main St",
+ "city": "New York",
+ "state": "NY",
+ "country": "USA",
+ "zipCode": "10001"
+ },
+ "orderItems": [
+ {
+ "productId": "prod-123",
+ "productName": "Laptop",
+ "price":999.99
+ }
+ ],
+ "payment": {
+ "cardNumber": "4532015112830366",
+ "cardHolderName": "John Doe",
+ "expiration": "12/25",
+ "cvc": "123",
+ "amount":999.99
+ }
 }
 ```
 
 **Response:**
 ```json
 {
-  "status": "204 No Content"
+ "status": "204 No Content"
 }
 ```
 
-#### 2. Cancel Order
+####2. Cancel Order
 ```http
 POST /orders/cancel
 Content-Type: application/json
 Authorization: Bearer <token>
 
 {
-  "orderId": 1
+ "orderId":1
 }
 ```
 
 **Response:**
 ```json
 {
-  "status": "204 No Content"
+ "status": "204 No Content"
 }
 ```
 
-#### 3. Get Order
+####3. Get Order
 ```http
 GET /orders/{orderId}
 Authorization: Bearer <token>
@@ -424,13 +480,13 @@ Authorization: Bearer <token>
 **Response:**
 ```json
 {
-  "data": {
-    "orderId": 1,
-    "orderStatus": "Completed",
-    "totalPrice": 999.99,
-    "buyerId": "550e8400-e29b-41d4-a716-446655440000"
-  },
-  "status": "200 OK"
+ "data": {
+ "orderId":1,
+ "orderStatus": "Completed",
+ "totalPrice":999.99,
+ "buyerId": "550e8400-e29b-41d4-a716-446655440000"
+ },
+ "status": "200 OK"
 }
 ```
 
@@ -438,13 +494,13 @@ Authorization: Bearer <token>
 
 | Code | Description |
 |------|-------------|
-| 200  | OK |
-| 204  | No Content |
-| 400  | Bad Request (Validation Error) |
-| 401  | Unauthorized (Missing/Invalid Token) |
-| 404  | Not Found |
-| 429  | Too Many Requests (Rate Limited) |
-| 500  | Internal Server Error |
+|200 | OK |
+|204 | No Content |
+|400 | Bad Request (Validation Error) |
+|401 | Unauthorized (Missing/Invalid Token) |
+|404 | Not Found |
+|429 | Too Many Requests (Rate Limited) |
+|500 | Internal Server Error |
 
 ## Features
 
@@ -474,7 +530,7 @@ Authorization: Bearer <token>
 - [x] Swagger/OpenAPI documentation
 
 ### Event-Driven Architecture
-- [x] RabbitMQ message broker
+- [x] RabbitMQ / Kafka / Redis bus selection
 - [x] Event publishing
 - [x] Background event processing
 - [x] Idempotency handling
@@ -490,15 +546,18 @@ Authorization: Bearer <token>
 
 | Technology | Purpose | Version |
 |-----------|---------|---------|
-| .NET | Framework | 9.0 |
-| ASP.NET Core | Web API | 9.0 |
-| Entity Framework Core | ORM | 9.0.12 |
-| SQL Server | Database | 2019+ |
-| RabbitMQ | Message Broker | 3.x |
-| MediatR | Command/Query Handler | 14.0.0 |
-| FluentValidation | Input Validation | 11.9.2 |
-| JWT Bearer | Authentication | 9.0.0 |
-| Swagger/OpenAPI | API Documentation | 6.6.2 |
+| .NET | Framework |9.0 |
+| ASP.NET Core | Web API |9.0 |
+| Entity Framework Core | ORM |9.0.12 |
+| SQL Server | Database |2019+ |
+| RabbitMQ | Message Broker |3.x |
+| Kafka | Message Broker | (configured) |
+| Redis | Cache / Bus option | (configured) |
+| .NET Aspire | Local orchestration / App Host | (configured) |
+| MediatR | Command/Query Handler |14.0.0 |
+| FluentValidation | Input Validation |11.9.2 |
+| JWT Bearer | Authentication |9.0.0 |
+| Swagger/OpenAPI | API Documentation |6.6.2 |
 
 ## Development
 
@@ -510,29 +569,29 @@ dotnet test
 ### Code Standards
 - [x] Nullable reference types enabled
 - [x] Implicit usings enabled
-- [x] C# 13.0
+- [x] C#13.0
 - [x] Clean Architecture principles
 
 ### Project Dependencies
 
 ```mermaid
 graph TD
-    A[Order.Api]
-    B[Order.Application]
-    C[Order.Domain]
-    D[OrderPersistence]
-    E[Bus.Shared]
-    F[WorkerService]
-    
-    A -->|Depends On| B
-    A -->|Depends On| D
-    A -->|Depends On| E
-    B -->|Depends On| C
-    B -->|Depends On| E
-  D -->|Depends On| C
-    F -->|Depends On| B
-    F -->|Depends On| D
-F -->|Depends On| E
+ A[Order.Api]
+ B[Order.Application]
+ C[Order.Domain]
+ D[OrderPersistence]
+ E[Bus.Shared]
+ F[WorkerService]
+
+ A -->|Depends On| B
+ A -->|Depends On| D
+ A -->|Depends On| E
+ B -->|Depends On| C
+ B -->|Depends On| E
+ D -->|Depends On| C
+ F -->|Depends On| B
+ F -->|Depends On| D
+ F -->|Depends On| E
 ```
 
 ## Docker Deployment
@@ -554,10 +613,10 @@ docker-compose up -d
 ```
 
 This will start:
-- Order.Api (port 5001)
+- Order.Api (port5001)
 - WorkerService (background)
-- SQL Server (port 1433)
-- RabbitMQ (port 5672)
+- SQL Server (port1433)
+- RabbitMQ (port5672)
 
 ## Environment Variables
 
@@ -591,12 +650,20 @@ JWT_EXPIRATION_MINUTES=60
 
 ## Additional Resources
 
-- [.NET 9 Documentation](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9)
+- [.NET9 Documentation](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-9)
 - [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)
 - [RabbitMQ Documentation](https://www.rabbitmq.com/documentation.html)
 - [JWT.io](https://jwt.io/)
 
 ## Troubleshooting
+
+### Aspire starts but WorkerService uses the wrong bus
+- Confirm `ECommerceAppHost/appsettings.json` `BusParameter` value.
+- Ensure WorkerService reads the same configuration key (`BUS_TYPE`) or that `BUS_TYPE` is mapped to the App Host parameter.
+
+### WorkerService fails on startup with DI error
+If you see: `No service for type 'OrderCreatedEventKafkaConsumer' has been registered.`
+- Ensure the consumer and its conditional hosted service wrapper are registered in `WorkerService` DI startup.
 
 ### Database Connection Issues
 ```bash
@@ -620,12 +687,12 @@ http://localhost:15672 (guest/guest)
 ### Port Already in Use
 ```bash
 # Find process using port
-lsof -i :5001  # macOS/Linux
-netstat -ano | findstr :5001  # Windows
+lsof -i :5001 # macOS/Linux
+netstat -ano | findstr :5001 # Windows
 
 # Kill process
-kill -9 <PID>  # macOS/Linux
-taskkill /PID <PID> /F  # Windows
+kill -9 <PID> # macOS/Linux
+taskkill /PID <PID> /F # Windows
 ```
 
 ## License
@@ -648,6 +715,6 @@ For support, email support@ecommerce.com or open an issue on GitHub.
 
 ---
 
-**Last Updated**: 2024
-**Version**: 1.0.0
+**Last Updated**:2026
+**Version**:1.0.0
 **Status**: Active Development
