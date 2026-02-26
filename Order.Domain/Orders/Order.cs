@@ -21,6 +21,8 @@ namespace OrderDomain.Orders
 
         public Address ShiptoAddress { get; private set; }
 
+        public DateTime PaymentDueAtUtc { get; set; }
+
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
         public DateTime CreatedDate { get; set; }

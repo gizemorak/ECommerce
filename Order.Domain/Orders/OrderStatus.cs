@@ -9,7 +9,9 @@ namespace OrderDomain.Orders
         Processed = 1,
         Completed = 2,
         Failed = 3,
-        Cancelled = 3
+        Cancelled = 4,
+        PendingPaymentDelay=5,
+        PaymentRequested = 6
 
     }
 

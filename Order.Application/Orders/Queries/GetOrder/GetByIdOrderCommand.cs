@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.Orders.Queries.GetOrder
 {
-    public sealed  record GetByIdOrderCommand(int OrderId) : IRequestByServiceResult;
-
+    public sealed record GetByIdOrderCommand(int OrderId) : IRequestByServiceResult<OrderDto>;
    
 
 }

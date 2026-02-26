@@ -9,13 +9,14 @@ public static class SendOrderEndpoint
 {
  public static void MapSendOrder(this RouteGroupBuilder group)
  {
- group.MapPost("/send", Handler)
- .WithName("SendOrder")
- .WithOpenApi()
- .WithSummary("Send a new order")
- .WithDescription("Creates and sends a new order for processing")
- .HasApiVersion(1, 0)
- .RequireAuthorization();
+        group.MapPost("/send", Handler)
+        .MapToApiVersion(1.0)
+        .WithName("SendOrder")
+        .WithOpenApi()
+        .WithSummary("Send a new order")
+        .WithDescription("Creates and sends a new order for processing");
+ // Remove this line: .HasApiVersion(1, 0)
+ //.RequireAuthorization();
  }
 
  private static async Task<IResult> Handler(CreateOrderCommand request, IMediator mediator)

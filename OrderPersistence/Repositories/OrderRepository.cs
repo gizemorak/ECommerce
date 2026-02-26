@@ -18,14 +18,23 @@ namespace OrderPersistence.Repositories
         public OrderRepository(ApplicationDbContext dbContext) => _dbContext = dbContext;
         public void Add(Order order) => _dbContext.Set<Order>().Add(order);
 
-        public void Update(Order order)
-          => _dbContext.Set<Order>().Update(order);
-
-
+  
         public async Task<Order> GetByIdAsync(int OrderId)=> await _dbContext.Set<Order>().FindAsync(OrderId);
-      
-         
-       
 
+
+        public async Task<List<Order>> GetAllOrders()
+        {
+            var list = await _dbContext.Set<Order>().ToListAsync();
+
+            return list;
+        }
+
+        public bool Update(Order order)
+        {
+            var updated = _dbContext.Set<Order>().Update(order);
+
+            return true;
+
+        }
     }
 }

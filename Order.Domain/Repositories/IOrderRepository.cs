@@ -11,8 +11,11 @@ namespace OrderDomain.Repositories
     public interface  IOrderRepository
     {
         void Add(Order order);
-        void Update(Order order);
+        bool Update(Order order);
 
         Task<Order> GetByIdAsync(int OrderId);
+
+
+        Task<List<Order>> GetAllOrders();
     }
 }

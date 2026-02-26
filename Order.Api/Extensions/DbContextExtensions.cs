@@ -9,7 +9,7 @@ public static class DbContextExtensions
 {
  public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
  {
- string connectionString = configuration.GetConnectionString("Database");
+ string connectionString = configuration.GetConnectionString("ecommercedb");
 
  services.AddDbContext<ApplicationDbContext>((sp, optionsBuilder) =>
  {

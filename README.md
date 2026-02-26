@@ -1,6 +1,6 @@
 # ECommerce Microservices Solution
 
-A modern, scalable e-commerce microservices architecture built with .NET 9, featuring order management, event-driven architecture, and comprehensive API security.
+A modern, scalable e-commerce microservices architecture built with **.NET 9**, featuring order management, event-driven messaging, and a **Worker Service** for background processing.
 
 ## Table of Contents
 
@@ -9,16 +9,20 @@ A modern, scalable e-commerce microservices architecture built with .NET 9, feat
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
+  - [Bus Selection (RabbitMQ / Kafka / Redis)](#bus-selection-rabbitmq--kafka--redis)
 - [API Documentation](#api-documentation)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Development](#development)
 - [Docker Deployment](#docker-deployment)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 
 ## Architecture Overview
 
-This solution follows a **microservices architecture** with event-driven communication:
+This solution follows a **microservices architecture** with event-driven communication.
+
+> Note: The active message broker is configurable (RabbitMQ/Kafka/Redis). The diagrams below show RabbitMQ as an example.
 
 ```mermaid
 graph TD
@@ -216,11 +220,11 @@ graph LR
 
 ## Prerequisites
 
-- .NET 9 SDK or later
-- SQL Server 2019 or later
-- RabbitMQ 3.x or later
-- Docker (optional, for containerized deployment)
-- Visual Studio 2022 or VS Code
+- **.NET 9 SDK** or later
+- **SQL Server 2019** or later
+- **RabbitMQ 3.x** or later
+- **Docker** (optional, for containerized deployment)
+- **Visual Studio 2022** or **VS Code**
 
 ### Required Services
 

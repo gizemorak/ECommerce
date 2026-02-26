@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.Services
 {
-    public class PaymentService
+    public class PaymentService:IPaymentService
     {
-        public void CheckPayment()
+  
+        public async Task CheckPayment(int OrderId, Guid BuyerId, decimal TotalPrice)
         {
             //todo payment prosess
-            Console.WriteLine("Ödeme alındı");
+            Console.WriteLine("payment completed");
         }
-
-        }
+    }
 
     }
 

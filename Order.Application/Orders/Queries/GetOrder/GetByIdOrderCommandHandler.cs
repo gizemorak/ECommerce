@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.Orders.Queries.GetOrder
 {
-    public sealed class GetByIdOrderCommandHandler : IRequestHandler<GetByIdOrderCommand,ServiceResult>
+    public sealed class GetByIdOrderCommandHandler : IRequestHandler<GetByIdOrderCommand, ServiceResult<OrderDto>>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -34,38 +34,26 @@ namespace OrderApplication.Orders.Queries.GetOrder
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
-
-
-
         }
 
-        public async Task<ServiceResult> Handle(GetByIdOrderCommand request, CancellationToken cancellationToken)
+        public async Task<ServiceResult<OrderDto>> Handle(GetByIdOrderCommand request, CancellationToken cancellationToken)
         {
-          
-
-            var order=await _orderRepository.GetByIdAsync(request.OrderId);
+            var order = await _orderRepository.GetByIdAsync(request.OrderId);
 
             if (order == null)
             {
                 _logger.LogWarning("Order with ID {OrderId} not found", request.OrderId);
-                return ServiceResult.ErrorAsNotFound();
+                return ServiceResult<OrderDto>.Error("Order not found", "The requested order was not found", System.Net.HttpStatusCode.NotFound);
             }
 
-            var orderdto = new OrderDto();
+            var orderdto = new OrderDto
+            {
+                OrderId = order.Id,
+                OrderStatus = (OrderStatusDto)order.Status
+            };
 
-            orderdto.OrderId = order.Id;
-            orderdto.OrderStatus = (OrderStatusDto)order.Status;
-
-
-
-            return  ServiceResult<OrderDto>.SuccessAsOk(orderdto);
+            return ServiceResult<OrderDto>.SuccessAsOk(orderdto);
         }
-
-   
-
-     
-
-
     }
 
 }

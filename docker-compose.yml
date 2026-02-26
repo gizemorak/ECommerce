@@ -21,15 +21,17 @@ services:
     image: rabbitmq:3.12.2-management
    mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: mssql
-    ports:
-      - "1433:1433"
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd
-    volumes:
-      - mssql_data:/var/opt/mssql
     restart: unless-stopped
+   kafka:
+    image: confluentinc/cp-kafka:7.6.0
+   kafka-ui:
+    container_name: kafka-ui
+   redis:
+    image: redis:7.2-alpine
+    container_name: redis
+  
 
 volumes:
   mssql_data:
+  kafka_data:
+  redis_data:

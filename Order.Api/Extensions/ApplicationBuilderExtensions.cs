@@ -21,8 +21,8 @@ public static class ApplicationBuilderExtensions
 
  app.UseMiddleware<RateLimitingMiddleware>();
 
- app.UseAuthentication();
- app.UseAuthorization();
+ //app.UseAuthentication();
+ //app.UseAuthorization();
 
  app.MapHealthChecks("/health", new HealthCheckOptions
  {

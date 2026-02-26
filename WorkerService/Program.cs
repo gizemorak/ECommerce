@@ -1,68 +1,42 @@
 using Bus.Shared;
+using Bus.Shared.Enums;
+using Bus.Shared.Extensions;
 using Bus.Shared.Options;
+using Bus.Shared.Publishers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using OrderApplication.Orders.Queries.GetOrder;
 using OrderApplication.Services;
 using OrderDomain.Repositories;
 using OrderPersistence;
 using OrderPersistence.Repositories;
+using RedisApp.StreamConsumers;
 using WorkerService.Consumers;
-using Microsoft.EntityFrameworkCore;
+using WorkerService.Extensions;
+using WorkerService.Services;
 
-namespace WorkerService
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = Host.CreateApplicationBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
+// ? Add bus services first (without immediate initialization)
+builder.Services.AddBusServices(builder.Configuration, BusType.RabbitMQ);
 
-            builder.Services.AddHostedService<UserCreatedEventConsumer>();
+// ? Add bus initialization service to initialize connections after startup
+builder.Services.AddHostedService<BusInitializationService>();
 
-            builder.Services.AddScoped<IPaymentService,PaymentService>();
+// Add consumer services
+builder.Services.AddHostedService<OrderCreatedEventRabbitConsumer>();
+builder.Services.AddHostedService<OrderCreatedEventKafkaConsumer>();
+builder.Services.AddHostedService<PaymentAutoStartKafkaWorker>();
+builder.Services.AddHostedService<OrderCreatedEventRedisConsumer>();
+builder.Services.AddHostedService<PaymentAutoStartRedisWorker>();
 
-            builder.Services.Configure<ServiceBusOption>(
-                builder.Configuration.GetSection(nameof(ServiceBusOption)));
-            builder.Services.AddSingleton<ServiceBusOption>(sp =>
-            {
-                IOptions<ServiceBusOption> optionsServiceBus = sp.GetRequiredService<IOptions<ServiceBusOption>>();
-                return optionsServiceBus.Value;
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-            });
+builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddApplicationDbContext(builder.Configuration);
 
-            builder.Services.AddMediatR(cfg =>
-cfg.RegisterServicesFromAssemblyContaining<GetByIdOrderCommandHandler>());
+builder.AddKafkaProducer<string, string>("kafka");
 
-
-            string connectionString = builder.Configuration.GetConnectionString("Database");
-
-            builder.Services.AddDbContext<ApplicationDbContext>(
-            (sp, optionsBuilder) =>
-            {
-
-                optionsBuilder.UseSqlServer(connectionString);
-
-            });
-
-    
-
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            builder.Services.AddSingleton<IBusService, RabbitMqBusService>(sp =>
-            {
-                ServiceBusOption serviceBusOptions = sp.GetRequiredService<ServiceBusOption>();
-
-                RabbitMqBusService rabbitMqBus = new RabbitMqBusService(serviceBusOptions);
-
-                rabbitMqBus.Init().Wait();
-                return rabbitMqBus;
-            });
-
-            var host = builder.Build();
-            host.Run();
-        }
-    }
-}
+var host = builder.Build();
+host.Run();

@@ -10,11 +10,11 @@ public static class CancelOrderEndpoint
     public static void MapCancelOrder(this RouteGroupBuilder group)
     {
         group.MapPost("/cancel", Handler)
+            .MapToApiVersion(1.0)
             .WithName("CancelOrder")
             .WithOpenApi()
             .WithSummary("Cancel an existing order")
             .WithDescription("Cancels an order that was previously created")
-            .HasApiVersion(1, 0)
             .RequireAuthorization();
     }
 

@@ -53,6 +53,9 @@ namespace OrderPersistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("PaymentDueAtUtc")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
