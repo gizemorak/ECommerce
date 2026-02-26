@@ -29,7 +29,7 @@ namespace OrderApplication.Orders.Queries.GetOrder
         public GetByIdOrderCommandHandler(
             IOrderRepository orderRepository,
             IUnitOfWork unitOfWork,
-            ILogger<GetByIdOrderCommandHandler> logger, IBusService busService)
+            ILogger<GetByIdOrderCommandHandler> logger)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
@@ -55,8 +55,6 @@ namespace OrderApplication.Orders.Queries.GetOrder
 
             orderdto.OrderId = order.Id;
             orderdto.OrderStatus = (OrderStatusDto)order.Status;
-            orderdto.TotalPrice = order.TotalPrice;
-            orderdto.BuyerId = order.BuyerId;
 
 
 

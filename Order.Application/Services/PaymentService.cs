@@ -8,31 +8,15 @@ using System.Threading.Tasks;
 
 namespace OrderApplication.Services
 {
-    public class PaymentService:IPaymentService
+    public class PaymentService
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public PaymentService(IOrderRepository orderRepository,
-            IUnitOfWork unitOfWork)
+        public void CheckPayment()
         {
-            this._orderRepository = orderRepository;
-            this._unitOfWork = unitOfWork;
+            //todo payment prosess
+            Console.WriteLine("Ödeme alındı");
         }
-        public async Task CheckPayment(int OrderId, Guid BuyerId, decimal TotalPrice)
-        {
-            // TODO: Implement payment processing logic
-            Console.WriteLine("Payment received");
-
-            var order = await _orderRepository.GetByIdAsync(OrderId);
-
-            order.Status= OrderStatus.Completed;
-
-            _orderRepository.Update(order);
-
-            await  _unitOfWork.SaveChangesAsync();
 
         }
 
     }
-}
+
