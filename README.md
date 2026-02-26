@@ -1,6 +1,6 @@
-# ECommerce Microservices Solution
+# ECommerce Payment Delayed Scenario in Queues Microservices Solution
 
-A modern, scalable e-commerce microservices architecture built with **.NET9**, featuring order management, event-driven messaging, and a **Worker Service** for background processing. The solution also includes a **.NET Aspire App Host** for orchestrating local development dependencies (SQL Server, RabbitMQ/Kafka/Redis, etc.).
+A modern, simple e-commerce microservices architecture built with **.NET9**, featuring order management, event-driven messaging, and a **Worker Service** for background processing. The solution also includes a **.NET Aspire App Host** for orchestrating local development dependencies (SQL Server, RabbitMQ/Kafka/Redis, etc.).
 
 ## Table of Contents
 
