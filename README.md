@@ -15,6 +15,7 @@ A modern, simple e-commerce microservices architecture built with **.NET9**, fea
 - [Features](#features)
 - [Technologies](#technologies)
 - [Development](#development)
+ - [Tests](#tests)
 - [Docker Deployment](#docker-deployment)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -180,6 +181,9 @@ ECommerce/
 | +-- WorkerService.csproj
 | +-- Dockerfile
 |
++-- ECommerce.Tests/ # Unit tests (xUnit + Moq)
++-- ECommerce.IntegrationTests/ # Integration tests (Testcontainers + WebApplicationFactory)
+|
 +-- ECommerceAppHost/ # .NET Aspire App Host (orchestrates local dependencies)
 | +-- appsettings.json # Parameters + resource configuration (e.g., BusParameter)
 | +-- AppHost.cs
@@ -201,6 +205,8 @@ ECommerce/
 | `OrderPersistence` | EF Core implementation, migrations, and configurations |
 | `Bus.Shared` | Event definitions and message broker service |
 | `WorkerService/Consumers` | Background event consumers for async processing |
+| `ECommerce.Tests` | Unit test project |
+| `ECommerce.IntegrationTests` | Integration test project (API + SQL Server container) |
 | `ECommerceAppHost` | Aspire App Host project (local orchestration) |
 
 ### Layer Dependencies
@@ -228,7 +234,7 @@ graph LR
 ## Prerequisites
 
 - **.NET9 SDK** or later
-- **Docker Desktop** (recommended; used by Aspire to provision containers/resources)
+- **Docker Desktop** (recommended; required for integration tests using Testcontainers)
 - **Visual Studio2022** or **VS Code**
 - If running manually (without Aspire):
  - **SQL Server2019** or later
@@ -561,9 +567,29 @@ Authorization: Bearer <token>
 
 ## Development
 
-### Running Tests (Future)
+### Tests
+
+This repository contains two test projects:
+
+- `ECommerce.Tests`: Unit tests (fast, no Docker required)
+- `ECommerce.IntegrationTests`: Integration tests using `WebApplicationFactory` + SQL Server via Testcontainers (**Docker required**)
+
+Run all tests:
+
 ```bash
 dotnet test
+```
+
+Run only unit tests:
+
+```bash
+dotnet test ECommerce.Tests
+```
+
+Run only integration tests:
+
+```bash
+dotnet test ECommerce.IntegrationTests
 ```
 
 ### Code Standards
@@ -660,6 +686,15 @@ JWT_EXPIRATION_MINUTES=60
 ### Aspire starts but WorkerService uses the wrong bus
 - Confirm `ECommerceAppHost/appsettings.json` `BusParameter` value.
 - Ensure WorkerService reads the same configuration key (`BUS_TYPE`) or that `BUS_TYPE` is mapped to the App Host parameter.
+
+### Integration tests fail with Docker endpoint error
+If you see an error similar to:
+
+`Docker is either not running or misconfigured... (Parameter 'DockerEndpointAuthConfig')`
+
+- Ensure Docker Desktop is running
+- Verify `docker ps` works
+- See Testcontainers configuration: https://dotnet.testcontainers.org/custom_configuration/
 
 ### WorkerService fails on startup with DI error
 If you see: `No service for type 'OrderCreatedEventKafkaConsumer' has been registered.`

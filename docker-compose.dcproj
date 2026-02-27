@@ -15,6 +15,12 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="ECommerce.IntegrationTests\ECommerce.IntegrationTests.csproj" />
+    <None Include="ECommerce.IntegrationTests\Infrastructure\MsSqlContainerFixture.cs" />
+    <None Include="ECommerce.IntegrationTests\Infrastructure\OrderApiFactory.cs" />
+    <None Include="ECommerce.IntegrationTests\OrderApi\HealthEndpointTests.cs" />
+    <None Include="ECommerce.Tests\ECommerce.Tests.csproj" />
+    <None Include="ECommerce.Tests\Order.Application\CreateOrderCommandHandlerTests.cs" />
     <None Include="ECommerceAppHost\AppHost.cs" />
     <None Include="README.md" />
   </ItemGroup>

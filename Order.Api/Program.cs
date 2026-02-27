@@ -24,3 +24,5 @@ using (var scope = app.Services.CreateScope())
 app.UseApi();
 
 app.Run();
+
+public partial class Program { }
