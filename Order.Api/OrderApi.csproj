@@ -37,6 +37,7 @@
     <ProjectReference Include="..\Bus.Shared\Bus.Shared.csproj" />
     <ProjectReference Include="..\Order.Application\OrderApplication.csproj" />
     <ProjectReference Include="..\OrderPersistence\OrderPersistence.csproj" />
+    <ProjectReference Include="..\ServiceDefaults1\ECommerceServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

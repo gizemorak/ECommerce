@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Order.Application\OrderApplication.csproj" />
     <ProjectReference Include="..\OrderPersistence\OrderPersistence.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceDefaults1\ECommerceServiceDefaults.csproj" />
+  </ItemGroup>
 </Project>

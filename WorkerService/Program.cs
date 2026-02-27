@@ -18,6 +18,8 @@ using WorkerService.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.AddServiceDefaults();
+
 // ? Add bus services first (without immediate initialization)
 builder.Services.AddBusServices(builder.Configuration, BusType.RabbitMQ);
 

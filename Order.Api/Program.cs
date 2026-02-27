@@ -6,6 +6,8 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // register services via extension
 builder.Services.AddApiServices(builder.Configuration);
 builder.Services.AddSingleton<IKeyedServiceProvider>(provider => (IKeyedServiceProvider)provider);
@@ -22,6 +24,7 @@ using (var scope = app.Services.CreateScope())
 
 // configure middleware and endpoints via extension
 app.UseApi();
+app.MapDefaultEndpoints();
 
 app.Run();
 
